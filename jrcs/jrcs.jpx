@@ -65,6 +65,7 @@
     <property category="docletJavadoc" name="use" value="1"/>
     <property category="docletJavadoc" name="version" value="1"/>
     <property category="javadoc" name="scope" value="private"/>
+    <property category="nodeJavadoc" name="buildWithProject" value="0"/>
     <property category="nodeJavadoc" name="directory" value="doc/api"/>
     <property category="nodeJavadoc" name="displayAllOutput" value="0"/>
   </node>

@@ -113,4 +113,9 @@ public class DeleteDelta
         s.append(original.size());
         s.append(EOL);
     }
+
+    public void accept(RevisionVisitor visitor)
+    {
+        visitor.visit(this);
+    }
 }

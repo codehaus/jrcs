@@ -57,75 +57,17 @@
 
 package org.apache.commons.jrcs.diff;
 
-import java.util.List;
-
 /**
- * Holds an add-delta between to revisions of a text.
- *
- * @version $Id$
- * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
- * @see Delta
- * @see Diff
- * @see Chunk
+ * Definition of a Visitor interface for {@link Revision Revisions}
+ * See "Design Patterns" by the Gang of Four
  */
-public class AddDelta
-    extends Delta
+public interface RevisionVisitor
 {
+    public void visit(Revision revision);
 
-    AddDelta()
-    {
-        super();
-    }
+    public void visit(DeleteDelta delta);
 
-    public AddDelta(int origpos, Chunk rev)
-    {
-        init(new Chunk(origpos, 0), rev);
-    }
+    public void visit(ChangeDelta delta);
 
-    public void verify(List target) throws PatchFailedException
-    {
-        if (original.first() > target.size())
-        {
-            throw new PatchFailedException("original.first() > target.size()");
-        }
-    }
-
-    public void applyTo(List target)
-    {
-        revised.applyAdd(original.first(), target);
-    }
-
-    public void toString(StringBuffer s)
-    {
-        s.append(original.anchor());
-        s.append("a");
-        s.append(revised.rangeString());
-        s.append(Diff.NL);
-        revised.toString(s, "> ", Diff.NL);
-    }
-
-    public void toRCSString(StringBuffer s, String EOL)
-    {
-        s.append("a");
-        s.append(original.anchor());
-        s.append(" ");
-        s.append(revised.size());
-        s.append(EOL);
-        revised.toString(s, "", EOL);
-    }
-
-    public void Accept(RevisionVisitor visitor)
-    {
-        visitor.visit(this);
-    }
-
-    public void accept(RevisionVisitor visitor)
-    {
-        visitor.visit(this);
-    }
+    public void visit(AddDelta delta);
 }
-
-
-
-
-

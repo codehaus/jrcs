@@ -112,19 +112,6 @@ public class Revision
         {
             throw new IllegalArgumentException("new delta is null");
         }
-            /*!!!
-        if (deltas_.size() > 0)
-        {
-            Delta prev = (Delta) deltas_.get(deltas_.size() - 1);
-            if (prev.original != null && delta.original != null
-            && (prev.original.from() > delta.original.from()))
-                throw new IllegalArgumentException("original.from > new.from");
-
-            if (prev.revised != null && delta.revised != null
-            && (prev.revised.from() > delta.revised.from()))
-                throw new IllegalArgumentException("revised.from > revised.to");
-        }
-            */
         deltas_.add(delta);
     }
 
@@ -155,6 +142,7 @@ public class Revision
 
     /**
      * Returns the number of deltas in this revision.
+     * @return the number of deltas.
      */
     public int size()
     {
@@ -251,19 +239,10 @@ public class Revision
     }
 
     /**
-     * Definition of a visitor interface for revisions.
-     * See "Design Patterns" by the Gang of Four
-     */
-    public interface Visitor {
-        public void visit(Revision revision);
-        public void visit(Delta delta);
-    }
-
-    /**
      * Accepts a visitor.
      * @param visitor the {@link Visitor} visiting this instance
      */
-    public void accept(Visitor visitor) {
+    public void accept(RevisionVisitor visitor) {
         visitor.visit(this);
         Iterator iter = deltas_.iterator();
         while (iter.hasNext()) {

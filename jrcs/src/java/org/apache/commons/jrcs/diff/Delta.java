@@ -251,8 +251,5 @@ public abstract class Delta
      * See the Visitor pattern in "Design Patterns" by the GOF4.
      * @param visitor The visitor.
      */
-    public void accept(Revision.Visitor visitor)
-    {
-        visitor.visit(this);
-    }
+    public abstract void accept(RevisionVisitor visitor);
 }
