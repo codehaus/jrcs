@@ -59,8 +59,11 @@ package org.apache.commons.jrcs.diff.myers;
 
 public final class PathNode
 {
+    /** Position in the original sequence. */
     public final int i;
+    /** Position in the revised sequence. */
     public final int j;
+    /** The previous node in the path. */
     public final PathNode prev;
 
     /**
@@ -74,7 +77,7 @@ public final class PathNode
     }
 
     /**
-     * Adds a node to an existing diffpath.
+     * Concatenates a new path node with an existing diffpath.
      * @param i The position in the original sequence for the new node.
      * @param j The position in the revised sequence for the new node.
      * @param prev The previous node in the path.
@@ -88,6 +91,9 @@ public final class PathNode
         this.prev = prev;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String toString()
     {
         StringBuffer buf = new StringBuffer("[");

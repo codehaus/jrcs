@@ -3,16 +3,16 @@
 <project>
   <property category="generalFormatting" name="blockIndent" value="4"/>
   <property category="idl" name="ProcessIDL" value="false"/>
+  <property category="javaFormatting" name="alignMultilineAssign" value="1"/>
   <property category="javaFormatting" name="arrayInitDataOnNewLine" value="0"/>
-  <property category="javaFormatting" name="catchOnNewLine" value="1"/>
   <property category="javaFormatting" name="classBraceNextLine" value="1"/>
   <property category="javaFormatting" name="methodBraceNextLine" value="1"/>
   <property category="javaFormatting" name="otherBraceNextLine" value="1"/>
   <property category="javaFormatting" name="packageThreshold" value="4"/>
   <property category="javaFormatting" name="throwsOnNewLine" value="1"/>
+  <property category="javaFormatting" name="wrapAtColumn" value="132"/>
   <property category="javadoc" name="custom.tags.1" value="todo;a;To Do:"/>
   <property category="runtime" name="ConfigurationCount" value="2"/>
-  <property category="runtime" name="DefaultConfiguration" value="2"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="AllTests"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.TestRunner"/>
@@ -59,5 +59,14 @@
   <property category="sys" name="Version" value="1.0"/>
   <property category="sys" name="VersionLabel" value="@version"/>
   <property category="sys" name="WorkingDirectory" value="."/>
+  <node name="Javadocs" type="Javadoc">
+    <property category="docletJavadoc" name="author" value="1"/>
+    <property category="docletJavadoc" name="splitIndex" value="1"/>
+    <property category="docletJavadoc" name="use" value="1"/>
+    <property category="docletJavadoc" name="version" value="1"/>
+    <property category="javadoc" name="scope" value="private"/>
+    <property category="nodeJavadoc" name="directory" value="doc/api"/>
+    <property category="nodeJavadoc" name="displayAllOutput" value="0"/>
+  </node>
   <file path="src/test/org/apache/commons/jrcs/rcs/idchar.testfile"/>
 </project>

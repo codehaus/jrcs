@@ -69,7 +69,7 @@ import org.apache.commons.jrcs.util.ToString;
 
 /**
  * A Revision holds the series of deltas that describe the differences
- * between to revisions of a text.
+ * between two sequences.
  *
  * @version $Revision$ $Date$
  *

@@ -67,8 +67,10 @@ package org.apache.commons.jrcs.diff;
 public interface DiffAlgorithm
 {
     /**
-     * Compute a {@link org.apache.commons.jrcs.diff#Revision Revision}
-     * between the original sequence and the revised sequence.
+     * Computes the difference between the original
+     * sequence and the revised sequence and returns it
+     * as a {@link org.apache.commons.jrcs.diff.Revision Revision}
+     * object.
      * <p>
      * The revision can be used to construct the revised sequence
      * from the original sequence.
