@@ -77,579 +77,447 @@ class ArchiveParser implements ArchiveParserConstants {
 * PARSER STARTS HERE
 */
   final public void archive(Archive arc) throws ParseException {
-    trace_call("archive");
-    try {
-      admin(arc);
-      label_1:
-      while (true) {
-        switch (jj_nt.kind) {
-        case NUM:
-          ;
-          break;
-        default:
-          break label_1;
-        }
-        delta(arc);
+    admin(arc);
+    label_1:
+    while (true) {
+      switch (jj_nt.kind) {
+      case NUM:
+        ;
+        break;
+      default:
+        break label_1;
       }
-      desc(arc);
-      label_2:
-      while (true) {
-        switch (jj_nt.kind) {
-        case NUM:
-          ;
-          break;
-        default:
-          break label_2;
-        }
-        text(arc);
-      }
-      jj_consume_token(0);
-    } finally {
-      trace_return("archive");
+      delta(arc);
     }
+    desc(arc);
+    label_2:
+    while (true) {
+      switch (jj_nt.kind) {
+      case NUM:
+        ;
+        break;
+      default:
+        break label_2;
+      }
+      text(arc);
+    }
+    jj_consume_token(0);
   }
 
   final public void admin(Archive arc) throws ParseException {
-    trace_call("admin");
-    try {
-      head(arc);
-      switch (jj_nt.kind) {
-      case BRANCH:
-        branch(arc);
-        break;
-      default:
-        ;
-      }
-      access(arc);
-      symbols(arc);
-      locks(arc);
-      optionals(arc);
-    } finally {
-      trace_return("admin");
+    head(arc);
+    switch (jj_nt.kind) {
+    case BRANCH:
+      branch(arc);
+      break;
+    default:
+      ;
     }
+    access(arc);
+    symbols(arc);
+    locks(arc);
+    optionals(arc);
   }
 
   final public void optionals(Archive arc) throws ParseException {
-    trace_call("optionals");
-    try {
-      label_3:
-      while (true) {
-        switch (jj_nt.kind) {
-        case COMMENT:
-        case EXPAND:
-        case ID:
-          ;
-          break;
-        default:
-          break label_3;
-        }
-        switch (jj_nt.kind) {
-        case COMMENT:
-          comment(arc);
-          break;
-        case EXPAND:
-          expand(arc);
-          break;
-        case ID:
-          newPhrase(arc.phrases);
-          break;
-        default:
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
+    label_3:
+    while (true) {
+      switch (jj_nt.kind) {
+      case COMMENT:
+      case EXPAND:
+      case ID:
+        ;
+        break;
+      default:
+        break label_3;
       }
-    } finally {
-      trace_return("optionals");
+      switch (jj_nt.kind) {
+      case COMMENT:
+        comment(arc);
+        break;
+      case EXPAND:
+        expand(arc);
+        break;
+      case ID:
+        newPhrase(arc.phrases);
+        break;
+      default:
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
     }
   }
 
   final public void newPhrases(Map map) throws ParseException {
-    trace_call("newPhrases");
-    try {
-      label_4:
-      while (true) {
-        switch (jj_nt.kind) {
-        case ID:
-          ;
-          break;
-        default:
-          break label_4;
-        }
-        newPhrase(map);
+    label_4:
+    while (true) {
+      switch (jj_nt.kind) {
+      case ID:
+        ;
+        break;
+      default:
+        break label_4;
       }
-    } finally {
-      trace_return("newPhrases");
+      newPhrase(map);
     }
   }
 
   final public void head(Archive arc) throws ParseException {
-    trace_call("head");
-    try {
     Version v;
-      jj_consume_token(HEAD);
-      switch (jj_nt.kind) {
-      case NUM:
-        v = version();
+    jj_consume_token(HEAD);
+    switch (jj_nt.kind) {
+    case NUM:
+      v = version();
                            arc.setHead(v);
-        break;
-      default:
-        ;
-      }
-      jj_consume_token(29);
-    } finally {
-      trace_return("head");
+      break;
+    default:
+      ;
     }
+    jj_consume_token(28);
   }
 
   final public void branch(Archive arc) throws ParseException {
-    trace_call("branch");
-    try {
   Version v;
-      jj_consume_token(BRANCH);
-      switch (jj_nt.kind) {
-      case NUM:
-        v = version();
+    jj_consume_token(BRANCH);
+    switch (jj_nt.kind) {
+    case NUM:
+      v = version();
                              arc.setBranch(v);
-        break;
-      default:
-        ;
-      }
-      jj_consume_token(29);
-    } finally {
-      trace_return("branch");
+      break;
+    default:
+      ;
     }
+    jj_consume_token(28);
   }
 
   final public void access(Archive arc) throws ParseException {
-    trace_call("access");
-    try {
     String name;
-      jj_consume_token(ACCESS);
-      label_5:
-      while (true) {
-        switch (jj_nt.kind) {
-        case ID:
-          ;
-          break;
-        default:
-          break label_5;
-        }
-        name = id();
-                           arc.addUser(name);
+    jj_consume_token(ACCESS);
+    label_5:
+    while (true) {
+      switch (jj_nt.kind) {
+      case ID:
+        ;
+        break;
+      default:
+        break label_5;
       }
-      jj_consume_token(29);
-    } finally {
-      trace_return("access");
+      name = id();
+                           arc.addUser(name);
     }
+    jj_consume_token(28);
   }
 
   final public void symbols(Archive arc) throws ParseException {
-    trace_call("symbols");
-    try {
     String  s;
     Version v;
-      jj_consume_token(SYMBOLS);
-      label_6:
-      while (true) {
-        switch (jj_nt.kind) {
-        case ID:
-        case SYM:
-          ;
-          break;
-        default:
-          break label_6;
-        }
-        s = sym();
-        jj_consume_token(30);
-        v = version();
-                                            arc.addSymbol(s, v);
+    jj_consume_token(SYMBOLS);
+    label_6:
+    while (true) {
+      switch (jj_nt.kind) {
+      case ID:
+      case SYM:
+        ;
+        break;
+      default:
+        break label_6;
       }
+      s = sym();
       jj_consume_token(29);
-    } finally {
-      trace_return("symbols");
+      v = version();
+                                            arc.addSymbol(s, v);
     }
+    jj_consume_token(28);
   }
 
   final public void locks(Archive arc) throws ParseException {
-    trace_call("locks");
-    try {
     String  name;
     Version v;
-      jj_consume_token(LOCKS);
-      label_7:
-      while (true) {
-        switch (jj_nt.kind) {
-        case ID:
-          ;
-          break;
-        default:
-          break label_7;
-        }
-        name = id();
-        jj_consume_token(30);
-        v = version();
-                                            arc.addLock(name, v);
-      }
-      jj_consume_token(29);
+    jj_consume_token(LOCKS);
+    label_7:
+    while (true) {
       switch (jj_nt.kind) {
-      case STRICT:
-        jj_consume_token(STRICT);
-        jj_consume_token(29);
-               arc.setStrictLocking(true);
+      case ID:
+        ;
         break;
       default:
-        ;
+        break label_7;
       }
-    } finally {
-      trace_return("locks");
+      name = id();
+      jj_consume_token(29);
+      v = version();
+                                            arc.addLock(name, v);
+    }
+    jj_consume_token(28);
+    switch (jj_nt.kind) {
+    case STRICT:
+      jj_consume_token(STRICT);
+      jj_consume_token(28);
+               arc.setStrictLocking(true);
+      break;
+    default:
+      ;
     }
   }
 
   final public void comment(Archive arc) throws ParseException {
-    trace_call("comment");
-    try {
   String s;
-      jj_consume_token(COMMENT);
-      switch (jj_nt.kind) {
-      case STRING:
-        s = string();
+    jj_consume_token(COMMENT);
+    switch (jj_nt.kind) {
+    case STRING:
+      s = string();
                             arc.setComment(s);
-        break;
-      default:
-        ;
-      }
-      jj_consume_token(29);
-    } finally {
-      trace_return("comment");
+      break;
+    default:
+      ;
     }
+    jj_consume_token(28);
   }
 
   final public void expand(Archive arc) throws ParseException {
-    trace_call("expand");
-    try {
  String s;
-      jj_consume_token(EXPAND);
-      switch (jj_nt.kind) {
-      case STRING:
-        s = string();
+    jj_consume_token(EXPAND);
+    switch (jj_nt.kind) {
+    case STRING:
+      s = string();
                            arc.setExpand(s);
-        break;
-      default:
-        ;
-      }
-      jj_consume_token(29);
-    } finally {
-      trace_return("expand");
+      break;
+    default:
+      ;
     }
+    jj_consume_token(28);
   }
 
   final public void newPhrase(Map map) throws ParseException {
-    trace_call("newPhrase");
-    try {
   String key;
   String value;
   StringBuffer values = new StringBuffer();
-      key = id();
-      label_8:
-      while (true) {
-        switch (jj_nt.kind) {
-        case ID:
-        case STRING:
-        case NUM:
-          ;
-          break;
-        default:
-          break label_8;
-        }
-        value = word();
-                     values.append(" " + value);
+    key = id();
+    label_8:
+    while (true) {
+      switch (jj_nt.kind) {
+      case ID:
+      case STRING:
+      case NUM:
+        ;
+        break;
+      default:
+        break label_8;
       }
-      jj_consume_token(29);
-    if (map != null) map.put(key, values.toString());
-    } finally {
-      trace_return("newPhrase");
+      value = word();
+                     values.append(" " + value);
     }
+    jj_consume_token(28);
+    if (map != null) map.put(key, values.toString());
   }
 
   final public String word() throws ParseException {
-    trace_call("word");
-    try {
   String result;
-      if (jj_2_1(2)) {
-        result = pair();
-      } else {
-        switch (jj_nt.kind) {
-        case ID:
-        case STRING:
-        case NUM:
-          result = simpleWord();
-          break;
-        default:
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
-      }
-    {if (true) return result;}
-    throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("word");
-    }
-  }
-
-  final public String simpleWord() throws ParseException {
-    trace_call("simpleWord");
-    try {
-    String  result;
-    Version v;
+    if (jj_2_1(2)) {
+      result = pair();
+    } else {
       switch (jj_nt.kind) {
       case ID:
-        result = id();
-        break;
-      case NUM:
-        v = version();
-                 result = v.toString();
-        break;
       case STRING:
-        result = string();
+      case NUM:
+        result = simpleWord();
         break;
       default:
         jj_consume_token(-1);
         throw new ParseException();
       }
+    }
+    {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String simpleWord() throws ParseException {
+    String  result;
+    Version v;
+    switch (jj_nt.kind) {
+    case ID:
+      result = id();
+      break;
+    case NUM:
+      v = version();
+                 result = v.toString();
+      break;
+    case STRING:
+      result = string();
+      break;
+    default:
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
    {if (true) return result;}
     throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("simpleWord");
-    }
   }
 
   final public String pair() throws ParseException {
-    trace_call("pair");
-    try {
     String left;
     String right;
-      left = simpleWord();
-      jj_consume_token(30);
-      right = simpleWord();
+    left = simpleWord();
+    jj_consume_token(29);
+    right = simpleWord();
       {if (true) return left + ":" + right;}
     throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("pair");
-    }
   }
 
   final public void desc(Archive arc) throws ParseException {
-    trace_call("desc");
-    try {
   String s;
-      jj_consume_token(DESC);
-      s = string();
+    jj_consume_token(DESC);
+    s = string();
                           arc.setDesc(s);
-    } finally {
-      trace_return("desc");
-    }
   }
 
   final public void delta(Archive arc) throws ParseException {
-    trace_call("delta");
-    try {
     Version   v;
     Node      node;
     int[]     d;
     String    s;
-      v = version();
+    v = version();
        node = arc.newNode(v);
-      jj_consume_token(DATE);
-      d = date();
+    jj_consume_token(DATE);
+    d = date();
                               node.setDate(d);
-      jj_consume_token(29);
-      jj_consume_token(AUTHOR);
-      s = id();
+    jj_consume_token(28);
+    jj_consume_token(AUTHOR);
+    s = id();
                               node.setAuthor(s);
-      jj_consume_token(29);
-      jj_consume_token(STATE);
-      switch (jj_nt.kind) {
-      case ID:
-        s = id();
+    jj_consume_token(28);
+    jj_consume_token(STATE);
+    switch (jj_nt.kind) {
+    case ID:
+      s = id();
                             node.setState(s);
-        break;
-      default:
-        ;
-      }
-      jj_consume_token(29);
-      jj_consume_token(BRANCHES);
-      label_9:
-      while (true) {
-        switch (jj_nt.kind) {
-        case NUM:
-          ;
-          break;
-        default:
-          break label_9;
-        }
-        v = version();
-                                 node.addBranch(arc.newBranchNode(v));
-      }
-      jj_consume_token(29);
-      jj_consume_token(NEXT);
+      break;
+    default:
+      ;
+    }
+    jj_consume_token(28);
+    jj_consume_token(BRANCHES);
+    label_9:
+    while (true) {
       switch (jj_nt.kind) {
       case NUM:
-        v = version();
-                                 node.setRCSNext(arc.newNode(v));
+        ;
         break;
       default:
-        ;
+        break label_9;
       }
-      jj_consume_token(29);
-      newPhrases(node.phrases);
-    } finally {
-      trace_return("delta");
+      v = version();
+                                 node.addBranch(arc.newBranchNode(v));
     }
+    jj_consume_token(28);
+    jj_consume_token(NEXT);
+    switch (jj_nt.kind) {
+    case NUM:
+      v = version();
+                                 node.setRCSNext(arc.newNode(v));
+      break;
+    default:
+      ;
+    }
+    jj_consume_token(28);
+    newPhrases(node.phrases);
   }
 
   final public void text(Archive arc) throws ParseException {
-    trace_call("text");
-    try {
   Version v;
   Node node;
   String log;
   String txt;
-      v = version();
+    v = version();
       node = arc.getNode(v);
-      jj_consume_token(LOG);
-      log = string();
+    jj_consume_token(LOG);
+    log = string();
       node.setLog(log);
-      newPhrases(node.phrases);
-      jj_consume_token(TEXT);
-      txt = string();
+    newPhrases(node.phrases);
+    jj_consume_token(TEXT);
+    txt = string();
        node.setText(txt);
-    } finally {
-      trace_return("text");
-    }
   }
 
   final public String id() throws ParseException {
-    trace_call("id");
-    try {
                     Token t;
-      t = jj_consume_token(ID);
+    t = jj_consume_token(ID);
                                              {if (true) return t.image;}
     throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("id");
-    }
   }
 
   final public String sym() throws ParseException {
-    trace_call("sym");
-    try {
   Token t;
-      switch (jj_nt.kind) {
-      case SYM:
-        t = jj_consume_token(SYM);
-        break;
-      case ID:
-        t = jj_consume_token(ID);
-        break;
-      default:
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
+    switch (jj_nt.kind) {
+    case SYM:
+      t = jj_consume_token(SYM);
+      break;
+    case ID:
+      t = jj_consume_token(ID);
+      break;
+    default:
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
     {if (true) return t.image;}
     throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("sym");
-    }
   }
 
   final public Version version() throws ParseException {
-    trace_call("version");
-    try {
   Version v;
   int   n, r;
-      n = num();
+    n = num();
     v = new Version(n);
-      label_10:
-      while (true) {
-        switch (jj_nt.kind) {
-        case 31:
-          ;
-          break;
-        default:
-          break label_10;
-        }
-        jj_consume_token(31);
-        n = num();
-                    v.__addBranch(n);
+    label_10:
+    while (true) {
+      switch (jj_nt.kind) {
+      case 30:
+        ;
+        break;
+      default:
+        break label_10;
       }
+      jj_consume_token(30);
+      n = num();
+                    v.__addBranch(n);
+    }
     {if (true) return v;}
     throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("version");
-    }
   }
 
   final public int[] date() throws ParseException {
-    trace_call("date");
-    try {
   int[] n = new int[6];
-      n[0] = num();
-      jj_consume_token(31);
-      n[1] = num();
-      jj_consume_token(31);
-      n[2] = num();
-      jj_consume_token(31);
-      n[3] = num();
-      jj_consume_token(31);
-      n[4] = num();
-      jj_consume_token(31);
-      n[5] = num();
+    n[0] = num();
+    jj_consume_token(30);
+    n[1] = num();
+    jj_consume_token(30);
+    n[2] = num();
+    jj_consume_token(30);
+    n[3] = num();
+    jj_consume_token(30);
+    n[4] = num();
+    jj_consume_token(30);
+    n[5] = num();
    {if (true) return n;}
     throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("date");
-    }
   }
 
   final public int num() throws ParseException {
-    trace_call("num");
-    try {
               Token t;
-      t = jj_consume_token(NUM);
+    t = jj_consume_token(NUM);
                                       {if (true) return Integer.parseInt(t.image);}
     throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("num");
-    }
   }
 
   final public String string() throws ParseException {
-    trace_call("string");
-    try {
  Token t;
-      t = jj_consume_token(STRING);
+    t = jj_consume_token(STRING);
                  {if (true) return Archive.unquoteString(t.image);}
     throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("string");
-    }
   }
 
   final private boolean jj_2_1(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     return !jj_3_1();
-  }
-
-  final private boolean jj_3_1() {
-    if (jj_3R_11()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_16() {
-    if (jj_scan_token(ID)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
   }
 
   final private boolean jj_3R_15() {
@@ -665,7 +533,7 @@ class ArchiveParser implements ArchiveParserConstants {
   }
 
   final private boolean jj_3R_20() {
-    if (jj_scan_token(31)) return true;
+    if (jj_scan_token(30)) return true;
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     return false;
   }
@@ -711,13 +579,25 @@ class ArchiveParser implements ArchiveParserConstants {
   final private boolean jj_3R_11() {
     if (jj_3R_12()) return true;
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(30)) return true;
+    if (jj_scan_token(29)) return true;
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     return false;
   }
 
   final private boolean jj_3R_19() {
     if (jj_scan_token(NUM)) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    return false;
+  }
+
+  final private boolean jj_3_1() {
+    if (jj_3R_11()) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
+    return false;
+  }
+
+  final private boolean jj_3R_16() {
+    if (jj_scan_token(ID)) return true;
     if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
     return false;
   }
@@ -775,7 +655,6 @@ class ArchiveParser implements ArchiveParserConstants {
     if ((token = jj_nt).next != null) jj_nt = jj_nt.next;
     else jj_nt = jj_nt.next = token_source.getNextToken();
     if (token.kind == kind) {
-      trace_token(token, "");
       return token;
     }
     jj_nt = token;
@@ -800,7 +679,6 @@ class ArchiveParser implements ArchiveParserConstants {
   final public Token getNextToken() {
     if ((token = jj_nt).next != null) jj_nt = jj_nt.next;
     else jj_nt = jj_nt.next = token_source.getNextToken();
-      trace_token(token, " (in getNextToken)");
     return token;
   }
 
@@ -820,53 +698,10 @@ class ArchiveParser implements ArchiveParserConstants {
     return new ParseException("Parse error at line " + line + ", column " + column + ".  Encountered: " + mess);
   }
 
-  private int trace_indent = 0;
-  private boolean trace_enabled = true;
-
   final public void enable_tracing() {
-    trace_enabled = true;
   }
 
   final public void disable_tracing() {
-    trace_enabled = false;
-  }
-
-  final private void trace_call(String s) {
-    if (trace_enabled) {
-      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
-      System.out.println("Call:   " + s);
-    }
-    trace_indent = trace_indent + 2;
-  }
-
-  final private void trace_return(String s) {
-    trace_indent = trace_indent - 2;
-    if (trace_enabled) {
-      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
-      System.out.println("Return: " + s);
-    }
-  }
-
-  final private void trace_token(Token t, String where) {
-    if (trace_enabled) {
-      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
-      System.out.print("Consumed token: <" + tokenImage[t.kind]);
-      if (t.kind != 0 && !tokenImage[t.kind].equals("\"" + t.image + "\"")) {
-        System.out.print(": \"" + t.image + "\"");
-      }
-      System.out.println(">" + where);
-    }
-  }
-
-  final private void trace_scan(Token t1, int t2) {
-    if (trace_enabled) {
-      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
-      System.out.print("Visited token: <" + tokenImage[t1.kind]);
-      if (t1.kind != 0 && !tokenImage[t1.kind].equals("\"" + t1.image + "\"")) {
-        System.out.print(": \"" + t1.image + "\"");
-      }
-      System.out.println(">; Expected token: <" + tokenImage[t2] + ">");
-    }
   }
 
 }
