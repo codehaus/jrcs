@@ -66,6 +66,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.jrcs.util.ToString;
+import java.util.Iterator;
 
 
 /**
@@ -228,8 +229,13 @@ public class Diff
         {
             if (items.contains(orig[i]))
             {
-                eqs.put(orig[i], new Integer(i));
-                items.remove(orig[i]);
+                List matches = (List) eqs.get(orig[i]);
+                if (matches == null)
+                {
+                    matches = new LinkedList();
+                    eqs.put(orig[i], matches);
+                }
+                matches.add(new Integer(i));
             }
         }
         return eqs;
@@ -240,14 +246,28 @@ public class Diff
         int[] result = new int[seq.length + 1];
         for (int i = 0; i < seq.length; i++)
         {
-            Integer value = (Integer) eqs.get(seq[i]);
-            if (value == null || value.intValue() < 0)
+            List matches = (List) eqs.get(seq[i]);
+            if (matches == null)
             {
                 result[i] = NF;
             }
             else
             {
-                result[i] = value.intValue();
+                Iterator match = matches.iterator();
+                Integer value = (Integer) match.next();
+                int j = value.intValue();
+                int distance = Math.abs(i - j);
+                while (match.hasNext())
+                {
+                    value = (Integer) match.next();
+                    j = value.intValue();
+                    int d = Math.abs(i - j);
+                    if (d < distance)
+                    {
+                        distance = d;
+                        result[i] = j;
+                    }
+                }
             }
         }
         result[seq.length] = EOS;
