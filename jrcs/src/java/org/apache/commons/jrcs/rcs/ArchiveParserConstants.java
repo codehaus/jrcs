@@ -22,11 +22,10 @@ public interface ArchiveParserConstants {
   int TEXT = 21;
   int ID = 22;
   int SYM = 23;
-  int IDCHAR = 24;
-  int STRING = 25;
-  int LETTER = 26;
-  int DIGIT = 27;
-  int NUM = 28;
+  int STRING = 24;
+  int IDCHAR = 25;
+  int DIGIT = 26;
+  int NUM = 27;
 
   int DEFAULT = 0;
   int PRE_DELTA = 1;
@@ -56,9 +55,8 @@ public interface ArchiveParserConstants {
     "\"text\"",
     "<ID>",
     "<SYM>",
-    "<IDCHAR>",
     "<STRING>",
-    "<LETTER>",
+    "<IDCHAR>",
     "<DIGIT>",
     "<NUM>",
     "\";\"",
