@@ -346,7 +346,7 @@ public class Archive
      */
     public void addSymbol(String sym, Version vernum) throws InvalidVersionNumberException
     {
-        //@TODO: verify if the symbol is valid, i.e., an identifier.
+        //@TODO: Verify if the symbol is valid  
         symbols.put(sym, vernum);
     }
 
@@ -354,6 +354,7 @@ public class Archive
      * Returns a Map of the symbols (tags) associated with each revision.
      * The symbols are the keys and the revision numbers are the values.
      * @return A map of symbol/revision number pairs.
+     */
     public Map getSymbols()
     {
         return symbols;

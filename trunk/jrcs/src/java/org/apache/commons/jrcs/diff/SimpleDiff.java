@@ -60,12 +60,11 @@ package org.apache.commons.jrcs.diff;
 import java.util.*;
 
 /**
- * Implements a simple differencing algortithm.
+ * Implements a simple differencing algortithm.<p>
  *
- * @version $Revision$ $Date$
+ * @date $Date$
+ * @version $Revision$
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
- * @see Delta
- * @see Revision
  *
  * <p><b>Overview of Algorithm</b></p>
  *
@@ -124,6 +123,8 @@ import java.util.*;
  * sequences, the differences between them are easily computed.
  * </p>
  *
+ * @see Delta
+ * @see Revision
  * Modifications:
  *
  * 27/Apr/2003 bwm
@@ -156,10 +157,12 @@ public class SimpleDiff
     }
 
     /**
-     * compute the difference between an original and a revision.
+     * Compute the difference between original and revised sequences.
      *
-     * @param rev the revision to compare with the original.
-     * @return a Revision describing the differences
+     * @param orig The original sequence.
+     * @param rev The revised sequence to be compared with the original.
+     * @return A Revision object describing the differences.
+     * @throws DifferenciationFailedException if the diff could not be computed.
      */
     public Revision diff(Object[] orig, Object[] rev)
         throws DifferentiationFailedException
