@@ -1194,6 +1194,35 @@ public class Archive
 
         return (Node[]) result.toArray(new Node[result.size()]);
     }
+    
+    
+    /** Returns the log message associated with the given revision.
+     *  @param version - the version to get the log message for
+     * 	@return the log message for the version.
+     *  @exception - if the version does not exist for the archive.
+     */
+    public String getLog(Version version) 
+            throws NodeNotFoundException
+    {
+        Node node = this.findNode(version);
+        if (node == null) 
+        {
+            throw new NodeNotFoundException("There's no version " + version);
+        }
+        return node.getLog();
+    }
+
+    /** Returns the log message associated with the given revision.
+     *  @param version - the version to get the log message for
+     * 	@return the log message for the version.
+     *  @exception - if the version does not exist for the archive.
+     */
+    public String getLog(String vernum) 
+            throws InvalidVersionNumberException, NodeNotFoundException
+    {
+        return getLog(new Version(vernum));
+    }
+
 }
 
 
