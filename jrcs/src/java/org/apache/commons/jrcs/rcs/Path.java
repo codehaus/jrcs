@@ -1,10 +1,10 @@
-package org.apache.commons.jrcs.rcs;
-
-/* ====================================================================
+/*
+ * ====================================================================
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
- * reserved.
+ * Copyright (c) 1999-2003 The Apache Software Foundation.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -18,21 +18,21 @@ package org.apache.commons.jrcs.rcs;
  *    the documentation and/or other materials provided with the
  *    distribution.
  *
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "Apache" and "Apache Software Foundation" and
- *    "Apache Maven" must not be used to endorse or promote products
- *    derived from this software without prior written permission. For
- *    written permission, please contact apache@apache.org.
+ * 4. The names "The Jakarta Project", "Commons", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
  *
- * 5. Products derived from this software may not be called "Apache",
- *    "Apache Maven", nor may "Apache" appear in their name, without
- *    prior written permission of the Apache Software Foundation.
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -52,8 +52,10 @@ package org.apache.commons.jrcs.rcs;
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
  */
 
+package org.apache.commons.jrcs.rcs;
 
 import java.util.Iterator;
 import java.util.List;
@@ -121,7 +123,7 @@ class Path
         }
     }
 
-    
+
     /**
      * Returns the text that corresponds to applying the patches
      * in the list of nodes in the Path.
@@ -142,7 +144,7 @@ class Path
      * in the list of nodes in the Path.
      * Assume that the text of the first node is plaintext and not
      * deltatext.
-     * @param annotate if true, then each text line is a 
+     * @param annotate if true, then each text line is a
      * {@link Line Line} with the original text annotated with
      * the revision in which it was last changed or added.
      * @return The resulting text after the patches
@@ -160,7 +162,7 @@ class Path
      * in the list of nodes in the Path.
      * Assume that the text of the first node is plaintext and not
      * deltatext.
-     * @param lines The list to where the text must be added and the 
+     * @param lines The list to where the text must be added and the
      * patches applied.
      * {@link Line Line} with the original text annotated with
      * the revision in which it was last changed or added.
@@ -179,9 +181,9 @@ class Path
      * in the list of nodes in the Path.
      * Assume that the text of the first node is plaintext and not
      * deltatext.
-     * @param lines The list to where the text must be added and the 
+     * @param lines The list to where the text must be added and the
      * patches applied.
-     * @param annotate if true, then each text line is a 
+     * @param annotate if true, then each text line is a
      * {@link Line Line} with the original text annotated with
      * the revision in which it was last changed or added.
      * @return The resulting text after the patches
