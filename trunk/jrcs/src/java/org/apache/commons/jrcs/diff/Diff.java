@@ -201,16 +201,9 @@ public class Diff
             {/* void */
             }
         }
-        try
+        if (!compare(deltas.patch(orig), rev))
         {
-            if (!compare(deltas.patch(orig), rev))
-            {
-                throw new DifferentiationFailedException();
-            }
-        }
-        catch (DiffException e)
-        {
-            throw new DifferentiationFailedException(e.getMessage());
+            throw new DifferentiationFailedException();
         }
         return deltas;
     }
