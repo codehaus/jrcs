@@ -66,7 +66,7 @@ import org.apache.commons.jrcs.diff.*;
  * <p>
  * See the paper at
  * <a href="http://www.cs.arizona.edu/people/gene/PAPERS/diff.ps">
- * Myers' site</a>
+ * http://www.cs.arizona.edu/people/gene/PAPERS/diff.ps</a>
  *
  * @version $Revision$ $Date$
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
@@ -77,10 +77,16 @@ import org.apache.commons.jrcs.diff.*;
 public class MyersDiff
     implements DiffAlgorithm
 {
+    /**
+     * Constructs an instance of the Myers differencing algorithm.
+     */
     public MyersDiff()
     {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Revision diff(Object[] orig, Object[] rev)
         throws DifferentiationFailedException
     {
@@ -98,28 +104,34 @@ public class MyersDiff
      * @return A minimum {@link PathNode Path} accross the differences graph.
      * @throws DifferentiationFailedException if a diff path could not be found.
      */
-    public PathNode buildPath(Object[] orig, Object[] rev)
+    public static PathNode buildPath(Object[] orig, Object[] rev)
         throws DifferentiationFailedException
     {
-        int n = orig.length;
-        int m = rev.length;
+        if (orig == null)
+            throw new IllegalArgumentException("original sequence is null");
+        if (rev == null)
+            throw new IllegalArgumentException("revised sequence is null");
 
-        int max = n + m + 1;
-        PathNode diagonal[] = new PathNode[1 + 2 * max];
-        int middle = (diagonal.length + 1) / 2;
+        // these are local constants
+        final int N = orig.length;
+        final int M = rev.length;
+
+        final int MAX = N + M + 1;
+        final int size = 1 + 2 * MAX;
+        final int middle = (size + 1) / 2;
+        final PathNode diagonal[] = new PathNode[size];
 
         PathNode path = null;
 
-        int d = 0;
         diagonal[middle + 1] = new PathNode(0, -1);
-        outer:for (d = 0; d < max; d++)
+        for (int d = 0; d < MAX; d++)
         {
             for (int k = -d; k <= d; k += 2)
             {
-                PathNode prev = null;
                 int kmiddle = middle + k;
                 int kplus = kmiddle + 1;
                 int kminus = kmiddle - 1;
+                PathNode prev = null;
 
                 int i;
                 if ( (k == -d) ||
@@ -133,22 +145,32 @@ public class MyersDiff
                     i = diagonal[kminus].i + 1;
                     prev = diagonal[kminus];
                 }
+
                 if (prev.i < 0 || prev.j < 0)
-                    prev = null;
+                {
+                    prev = null; // discard artificial nodes used for bootstrapping
+                }
 
                 int j = i - k;
-                while (i < n && j < m && orig[i].equals(rev[j]))
+
+                // orig and rev are zero-based
+                // but the algorithm is one-based
+                // that's why there's no +1 when indexing the sequences
+                while (i < N && j < M && orig[i].equals(rev[j]))
                 {
                     i++;
                     j++;
                 }
+
                 diagonal[kmiddle] = new PathNode(i, j, prev);
-                if (i >= n && j >= m)
+
+                if (i >= N && j >= M)
                 {
                     return diagonal[kmiddle];
                 }
             }
         }
+        // According to Myers, this cannot happen
         throw new DifferentiationFailedException("could not find a diff path");
     }
 
@@ -162,7 +184,7 @@ public class MyersDiff
      * @throws DifferentiationFailedException if the {@link Revision} could
      *         not be built.
      */
-    public Revision buildRevision(PathNode path, Object[] orig, Object[] rev)
+    public static Revision buildRevision(PathNode path, Object[] orig, Object[] rev)
     {
         if (path == null)
             throw new IllegalArgumentException("path is null");
@@ -177,27 +199,28 @@ public class MyersDiff
             int i = path.i;
             int j = path.j;
             while (i > 0 && j > 0
-                   && i > path.prev.i && j > path.prev.j
-                   && orig[i - 1].equals(rev[j - 1]))
-            { // reverse snake
+                   && i > path.prev.i && j > path.prev.j // donnot follow a snake past a previous node
+                   && orig[i - 1].equals(rev[j - 1])) // check that it is indeed a snake
+            {
+                // reverse snake
                 i--;
                 j--;
             }
 
-            int ia;
-            int ja;
+            int ianchor;
+            int janchor;
             do
             {
                 path = path.prev;
-                ia = path.i;
-                ja = path.j;
+                ianchor = path.i;
+                janchor = path.j;
             }
             while (path.prev != null
-                   && (ia == path.prev.i || ja == path.prev.j)
-                   ); // while no snake
+                   && (ianchor == path.prev.i || janchor == path.prev.j) // while no snake
+                   );
 
-            Delta delta = Delta.newDelta(new Chunk(orig, ia, i - ia),
-                                         new Chunk(rev, ja, j - ja));
+            Delta delta = Delta.newDelta(new Chunk(orig, ianchor, i - ianchor),
+                                         new Chunk(rev, janchor, j - janchor));
             revision.insertDelta(delta);
         }
         return revision;
