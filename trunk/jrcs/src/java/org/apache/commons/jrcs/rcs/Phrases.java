@@ -89,7 +89,7 @@ class Phrases
     public String toString()
     {
         StringBuffer s = new StringBuffer();
-        toString(s, "\n");
+        toString(s, Archive.RCS_NEWLINE);
         return s.toString();
     }
 }

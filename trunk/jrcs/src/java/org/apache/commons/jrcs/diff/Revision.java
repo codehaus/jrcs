@@ -80,7 +80,7 @@ public class Revision
 
     List deltas_ = new LinkedList();
 
-    
+
     /**
      * Creates an empty Revision.
      */
@@ -137,7 +137,7 @@ public class Revision
     /**
      * Applies the series of deltas in this revision as patches to
      * the given text.
-     * @param src the text to patch, which the method doesn't change. 
+     * @param src the text to patch, which the method doesn't change.
      * @return the resulting text after the patches have been applied.
      * @throws PatchFailedException if any of the patches cannot be applied.
      */
@@ -215,7 +215,7 @@ public class Revision
     }
 
     /**
-     * Converts this delta into its RCS style string representation 
+     * Converts this delta into its RCS style string representation
      * using the default line separator.
      */
     public String toRCSString()

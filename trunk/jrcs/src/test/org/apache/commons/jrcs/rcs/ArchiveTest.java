@@ -109,7 +109,7 @@ public class ArchiveTest extends TestCase
         "[8] eight  $" + "State: trash 8 $",
         "[9] nine   $Locker$",
         "[10] ten   $" + "RCSfile: trash #10 $ "
-                 + "$" + "Revision: trash #10 $ " 
+                 + "$" + "Revision: trash #10 $ "
                  + "$" +  "Author: trash $",
         ""
     };
@@ -123,11 +123,11 @@ public class ArchiveTest extends TestCase
         "[8] eight  $" + "State: Exp $",
         "[9] nine   $Locker$",
         "[10] ten   $" + "RCSfile: test_file,v $ "
-                 + "$" + "Revision: 1.2 $ "  
+                 + "$" + "Revision: 1.2 $ "
                  + "$" +  "Author: " + user + " $",
         ""
     };
-    
+
     Object[] v1_3 = new String[]{
         "[1] one changed",
         "[2] two",
@@ -192,7 +192,7 @@ public class ArchiveTest extends TestCase
 
     public void setUp()
     {
-        archive = new Archive(v1_1, "A simple test file\n");
+        archive = new Archive(v1_1, "A simple test file");
         archive.setFileName("/a/test/path/test_file,v");
     }
 
@@ -226,7 +226,7 @@ public class ArchiveTest extends TestCase
 
         Node[] log = archive.changeLog();
         assertNotNull("log is null", log);
-        assertEquals(    1, log.length);    
+        assertEquals(    1, log.length);
         assertEquals("1.1", log[0].version.toString());
     }
 
@@ -235,7 +235,7 @@ public class ArchiveTest extends TestCase
             RCSException
     {
         testAdd1_1();
-        archive.addRevision(v1_2, "Added 3.1, deleted 6\n");
+        archive.addRevision(v1_2, "Added 3.1, deleted 6");
         Object[] rev = archive.getRevision();
         assertEquals("1.2", archive.head.version.toString());
         assertEquals(ToString.arrayToString(v1_2), ToString.arrayToString(rev));
@@ -249,7 +249,7 @@ public class ArchiveTest extends TestCase
 
         Node[] log = archive.changeLog();
         assertNotNull("log is null", log);
-        assertEquals(    2, log.length);    
+        assertEquals(    2, log.length);
         assertEquals("1.1", log[0].version.toString());
         assertEquals("1.2", log[1].version.toString());
     }
@@ -259,7 +259,7 @@ public class ArchiveTest extends TestCase
             RCSException
      {
        testAdd1_1();
-       archive.addRevision(v1_2_with_keywords, "Added revision with keywords\n");
+       archive.addRevision(v1_2_with_keywords, "Added revision with keywords");
        Object[] rev = archive.getRevision();
 
        assertEquals("1.2", archive.head.version.toString());
@@ -279,7 +279,7 @@ public class ArchiveTest extends TestCase
             RCSException
     {
         testAdd1_2();
-        archive.addRevision(v1_3, "Changed 1\n");
+        archive.addRevision(v1_3, "Changed 1");
         Object[] rev = archive.getRevision();
         assertTrue(Diff.compare(v1_3, rev));
         assertNull(archive.addRevision(v1_3, "should not be added"));
@@ -292,7 +292,7 @@ public class ArchiveTest extends TestCase
 
         Node[] log = archive.changeLog();
         assertNotNull("log is null", log);
-        assertEquals(    3, log.length);    
+        assertEquals(    3, log.length);
         assertEquals("1.1", log[0].version.toString());
         assertEquals("1.2", log[1].version.toString());
         assertEquals("1.3", log[2].version.toString());
@@ -303,12 +303,17 @@ public class ArchiveTest extends TestCase
             RCSException
     {
         testAdd1_3();
-        archive.addRevision(v1_2_1_1, "1.2.1", "Added 2.1, changed 4, added 5.1\n");
+        archive.addRevision(v1_2_1_1, "1.2.1", "Added 2.1, changed 4, added 5.1");
         String filestr = archive.toString();
-        Object[] file = Diff.stringToArray(filestr);
-        String diff = Diff.diff(file, sampleFile).toRCSString(Diff.NL);
-        String delta = ToString.arrayToString(deltaOverDates) + Diff.NL;
-        assertEquals("delta over dates", delta, diff);
+        String[] file = (String[]) Diff.stringToArray(filestr);
+
+        for(int i = 0; i < sampleFile.length && i < file.length; i++)
+        {
+            if(!sampleFile[i].startsWith("date"))
+                assertEquals("line " + i, sampleFile[i], file[i]);
+        }
+        assertEquals("file size", sampleFile.length, file.length);
+
         Object[] rev = archive.getRevision("1.2.1");
         assertTrue("diffs equal", Diff.compare(v1_2_1_1, rev));
         assertNull("should not be added", archive.addRevision(v1_2_1_1, "1.2.1", "should not be added"));
@@ -327,14 +332,14 @@ public class ArchiveTest extends TestCase
 
         Node[] log = archive.changeLog(new Version("1.2.1"));
         assertNotNull("log is null", log);
-        assertEquals(    3, log.length);    
+        assertEquals(    3, log.length);
         assertEquals("1.1",     log[0].version.toString());
         assertEquals("1.2",     log[1].version.toString());
         assertEquals("1.2.1.1", log[2].version.toString());
 
         log = archive.changeLog(new Version("1.2.1"), new Version("1.2"));
         assertNotNull("log is null", log);
-        assertEquals(    2, log.length);    
+        assertEquals(    2, log.length);
         assertEquals("1.2",     log[0].version.toString());
         assertEquals("1.2.1.1", log[1].version.toString());
     }
@@ -345,7 +350,7 @@ public class ArchiveTest extends TestCase
     {
         testAdd1_3();
         archive.setBranch("1.2.0");
-        archive.addRevision(v1_2_1_1, "Added 2.1, changed 4\n");
+        archive.addRevision(v1_2_1_1, "Added 2.1, changed 4");
         String file = archive.toString();
         Object[] rev = archive.getRevision("1.2.1.1");
         assertTrue(Diff.compare(v1_2_1_1, rev));
@@ -382,7 +387,7 @@ public class ArchiveTest extends TestCase
 
         Node[] log = archive.changeLog(new Version("1.2.8"));
         assertNotNull("log is null", log);
-        assertEquals(    5, log.length);    
+        assertEquals(    5, log.length);
         assertEquals("1.1",     log[0].version.toString());
         assertEquals("1.2"    , log[1].version.toString());
         assertEquals("1.2.8.2", log[2].version.toString());
@@ -422,6 +427,7 @@ public class ArchiveTest extends TestCase
         archive.addRevision(new String[] { "user" }, "original");
     }
 
+
     String[] sampleFile = {
         "head\t1.3;",
         "access;",
@@ -453,8 +459,7 @@ public class ArchiveTest extends TestCase
         "",
         "",
         "desc",
-        "@A simple test file",
-        "@",
+        "@@",
         "",
         "",
         "1.3",
@@ -474,7 +479,7 @@ public class ArchiveTest extends TestCase
         "1.2",
         "log",
         "@Added 3.1, deleted 6",
-        "@",
+        "@",  // 50
         "text",
         "@d1 1",
         "a1 1",
@@ -484,7 +489,7 @@ public class ArchiveTest extends TestCase
         "",
         "1.2.1.1",
         "log",
-        "@Added 2.1, changed 4, added 5.1",
+        "@Added 2.1, changed 4, added 5.1",  //60
         "@",
         "text",
         "@a2 1",
@@ -494,12 +499,12 @@ public class ArchiveTest extends TestCase
         "[4] four changed",
         "a6 1",
         "[5.1]",
-        "@",
+        "@", // 70
         "",
         "",
         "1.1",
         "log",
-        "@Initial revision",
+        "@A simple test file",
         "@",
         "text",
         "@d4 1",
@@ -508,18 +513,4 @@ public class ArchiveTest extends TestCase
         "@"
     };
 
-    String[] deltaOverDates = {
-        "d9 1",
-        "a9 1",
-        "date\t99.08.24.16.58.59;\tauthor juanca;\tstate Exp;",
-        "d14 1",
-        "a14 1",
-        "date\t99.08.24.16.57.54;\tauthor juanca;\tstate Exp;",
-        "d20 1",
-        "a20 1",
-        "date\t99.08.24.16.56.51;\tauthor juanca;\tstate Exp;",
-        "d25 1",
-        "a25 1",
-        "date\t99.08.24.17.00.30;\tauthor juanca;\tstate Exp;"
-    };
 }

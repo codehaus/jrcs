@@ -84,18 +84,18 @@ import org.apache.commons.jrcs.util.ToString;
  * Handling of RCS/CVS style version control archives.
  *
  *
- * <p>JRCS is a library that knows how to manipulate the archive files produced 
- * by the RCS and CVS version control systems. JRCS is not intended to replace 
+ * <p>JRCS is a library that knows how to manipulate the archive files produced
+ * by the RCS and CVS version control systems. JRCS is not intended to replace
  * neither tool. JRCS was written to be able create archive analysis tools
- * that can do things like identify hot spots in the source code, 
- * measure the contributions by each developer, 
+ * that can do things like identify hot spots in the source code,
+ * measure the contributions by each developer,
  * or assess how bugs make it in.</p>
  *
  * <p>The reasons why JRCS has the ability do do check-ins and save archives
  * is API symmetry, and to simplify the writing of unit tests.</p>
  *
- * <p><b>CAVEAT UTILITOR:</b> Do not make modifications to your archives with JRCS. 
- * There needs to be an important amount of additional testing 
+ * <p><b>CAVEAT UTILITOR:</b> Do not make modifications to your archives with JRCS.
+ * There needs to be an important amount of additional testing
  * before it's safe to do that.</p>
  *
  * <p>The {@link org.apache.commons.jrcs.rcs rcs} package implements the
@@ -106,24 +106,24 @@ import org.apache.commons.jrcs.util.ToString;
  * <p>The {@link org.apache.commons.jrcs.diff diff} package implements
  * the differencing engine that JRCS uses. The engine has the power of Unix diff,
  * is simple to understand, and can be used independently of the archive handling
- * functionality. The entry point to the differencing engine is class 
+ * functionality. The entry point to the differencing engine is class
  * {@link org.apache.commons.jrcs.diff.Diff Diff}.</p>
  *
  * <p>Within this library, the word <i>text</i> means a unit of information
  * subject to version control. The word <i>revision</i> means a particular
- * version of a text. Each <i>revision</i> has a <i>version number</i> 
+ * version of a text. Each <i>revision</i> has a <i>version number</i>
  * associated to it. <i>Version numbers</i> are dot-separated lists of numbers.
  * Version numbers with an odd number of dots indicate revisions, while those
  * with an even number of dots (including zero dots) designate branches.</p>
  *
  * <p>Revisions of a text are represented as <code>Object[]</code> because
  * the diff engine is capable of handling more than plain text. In fact,
- * arrays of any type that implements 
+ * arrays of any type that implements
  * {@link java.lang.Object#hashCode hashCode()} and
  * {@link java.lang.Object#equals equals()}
  * correctly can be subject to differencing and version control using this
  * library.</p>
- * 
+ *
  * <p>To create an empty archive use:
  * <code><pre>
  *   Archive archive = new Archive();
@@ -137,14 +137,14 @@ import org.apache.commons.jrcs.util.ToString;
  * </p>
  *
  * <p>You can also initialize archives from streams.</p>
- * 
+ *
  * <p>To retreive a revision from an archive use:
  * <code><pre>
  *   String versionNumber = "1.2";
  *   Object[] text = archive.getRevision(versionNumber);
  * </pre></code>
  * </p>
- * 
+ *
  * <p>You can also retreive revisions in such a way that each item
  * is annotated with the version number of the revision in which it was
  * last changed or added. To retrieve annotated text use:
@@ -155,7 +155,7 @@ import org.apache.commons.jrcs.util.ToString;
  *       System.out.println(text[i].revision.version);
  * </pre></code>
  * </p>
- * 
+ *
  * <p>This class is NOT thread safe.</p>
  * @see org.apache.commons.jrcs.diff
  *
@@ -228,8 +228,7 @@ public class Archive
         // now add the _head node
         this.head = (TrunkNode) newNode(vernum, null);
         this.head.setText(text);
-        this.head.setLog("Initial revision\n");
-        this.setDesc(desc);
+        this.head.setLog(desc);
     }
 
     /**
@@ -279,7 +278,7 @@ public class Archive
     public void save(OutputStream output)
             throws IOException
     {
-        new OutputStreamWriter(output).write(toCharArray());
+        output.write(toByteArray());
     }
 
     /**
@@ -553,6 +552,17 @@ public class Archive
     public char[] toCharArray()
     {
         return toString(Archive.RCS_NEWLINE).toCharArray();
+    }
+
+    /**
+     * Return a text image of the archive as a char array.
+     * This is useful for writing the archive to a file without
+     * having the characters be interpreted by the writer.
+     * @return The archive image.
+     */
+    public byte[] toByteArray()
+    {
+        return toString(Archive.RCS_NEWLINE).getBytes();
     }
 
 
@@ -1039,12 +1049,12 @@ public class Archive
         String deltaText;
         if (headAdd)
         {
-            deltaText = Diff.diff(text, head.getText()).toRCSString();
+            deltaText = Diff.diff(text, head.getText()).toRCSString(RCS_NEWLINE);
         }
         else
         {
             Object[] oldText = path.patch().toArray();
-            deltaText = Diff.diff(oldText, text).toRCSString();
+            deltaText = Diff.diff(oldText, text).toRCSString(RCS_NEWLINE);
         }
         if (deltaText.length() == 0)
         {
@@ -1127,10 +1137,10 @@ public class Archive
     }
 
     /**
-     * Return the list of nodes between the head revision and 
+     * Return the list of nodes between the head revision and
      * the root revision.
      */
-    public Node[] changeLog() 
+    public Node[] changeLog()
     {
         return changeLog(head.version);
     }
@@ -1163,10 +1173,10 @@ public class Archive
         {
            throw new NodeNotFoundException(earliest.toString());
         }
-        
+
         List result = new LinkedList();
-        
-        Node node = last; 
+
+        Node node = last;
         while (node != null)
         {
             result.add(0, node);
