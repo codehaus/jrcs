@@ -144,7 +144,7 @@ public class Diff
 
     protected DiffAlgorithm defaultAlgorithm()
     {
-        return new MyersDiff();
+        return new SimpleDiff();
     }
 
     /**
@@ -314,7 +314,7 @@ public class Diff
         Random r = new Random(seed);
         for(int i = 0; i < result.length; i++)
         {
-            result[i] = new Integer(r.nextInt());
+            result[i] = new Integer(r.nextInt(size));
         }
         return result;
     }

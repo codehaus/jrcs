@@ -62,6 +62,7 @@ import junit.framework.*;
 public class DiffTest
     extends TestCase
 {
+    static final int LARGE=4*1024;
 
     public DiffTest(String testName)
     {
@@ -360,8 +361,8 @@ public class DiffTest
     public void testLargeShuffles()
         throws DifferentiationFailedException, PatchFailedException
     {
-        Object[] orig = Diff.randomSequence(1024);
-        for (int seed = 0; seed < 2; seed++)
+        Object[] orig = Diff.randomSequence(LARGE);
+        for (int seed = 0; seed < 8; seed++)
         {
             Object[] rev = Diff.shuffle(orig);
             Revision revision = Diff.diff(orig, rev);
@@ -371,6 +372,22 @@ public class DiffTest
                 fail("iter " + seed + " revisions differ after patch");
             }
             orig = rev;
+        }
+    }
+
+    public void testLargeShuffleEdits()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Object[] orig = Diff.randomSequence(LARGE);
+        for (int seed = 0; seed < 8; seed++)
+        {
+            Object[] rev = Diff.randomEdit(orig, seed);
+            Revision revision = Diff.diff(orig, rev);
+            Object[] patched = revision.patch(orig);
+            if (!Diff.compare(patched, rev))
+            {
+                fail("iter " + seed + " revisions differ after patch");
+            }
         }
     }
 }
