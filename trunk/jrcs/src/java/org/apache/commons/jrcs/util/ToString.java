@@ -1,10 +1,10 @@
-package org.apache.commons.jrcs.util;
-
-/* ====================================================================
+/*
+ * ====================================================================
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
- * reserved.
+ * Copyright (c) 1999-2003 The Apache Software Foundation.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -18,21 +18,21 @@ package org.apache.commons.jrcs.util;
  *    the documentation and/or other materials provided with the
  *    distribution.
  *
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "Apache" and "Apache Software Foundation" and
- *    "Apache Maven" must not be used to endorse or promote products
- *    derived from this software without prior written permission. For
- *    written permission, please contact apache@apache.org.
+ * 4. The names "The Jakarta Project", "Commons", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
  *
- * 5. Products derived from this software may not be called "Apache",
- *    "Apache Maven", nor may "Apache" appear in their name, without
- *    prior written permission of the Apache Software Foundation.
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -52,8 +52,10 @@ package org.apache.commons.jrcs.util;
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
  */
 
+package org.apache.commons.jrcs.util;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -62,7 +64,7 @@ import java.util.LinkedList;
 
 /**
  * This class delegates handling of the to a StringBuffer based version.
- * 
+ *
  * @version $Revision$ $Date$
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  */
@@ -73,7 +75,7 @@ public class ToString
     }
 
     /**
-     * Default implementation of the 
+     * Default implementation of the
      * {@link java.lang.Object#toString toString() } method that
      * delegates work to a {@link java.lang.StringBuffer StringBuffer}
      * base version.
@@ -89,13 +91,13 @@ public class ToString
      * Place a string image of the object in a StringBuffer.
      * @param s the string buffer.
      */
-    public void toString(StringBuffer s) 
+    public void toString(StringBuffer s)
     {
             s.append(super.toString());
-    }        
+    }
 
 
-    
+
     /**
      * Breaks a string into an array of strings.
      * Use the value of the <code>line.separator</code> system property

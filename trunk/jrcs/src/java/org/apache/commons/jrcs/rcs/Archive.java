@@ -1,10 +1,10 @@
-package org.apache.commons.jrcs.rcs;
-
-/* ====================================================================
+/*
+ * ====================================================================
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
- * reserved.
+ * Copyright (c) 1999-2003 The Apache Software Foundation.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -18,21 +18,21 @@ package org.apache.commons.jrcs.rcs;
  *    the documentation and/or other materials provided with the
  *    distribution.
  *
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "Apache" and "Apache Software Foundation" and
- *    "Apache Maven" must not be used to endorse or promote products
- *    derived from this software without prior written permission. For
- *    written permission, please contact apache@apache.org.
+ * 4. The names "The Jakarta Project", "Commons", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
  *
- * 5. Products derived from this software may not be called "Apache",
- *    "Apache Maven", nor may "Apache" appear in their name, without
- *    prior written permission of the Apache Software Foundation.
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -52,8 +52,10 @@ package org.apache.commons.jrcs.rcs;
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
  */
 
+package org.apache.commons.jrcs.rcs;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -159,8 +161,8 @@ import org.apache.commons.jrcs.util.ToString;
  * <p>This class is NOT thread safe.</p>
  * @see org.apache.commons.jrcs.diff
  *
- * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  * @version $Id$
+ * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  */
 public class Archive
         extends ToString
@@ -1204,7 +1206,7 @@ public class Archive
         return (Node[]) result.toArray(new Node[result.size()]);
     }
 
-    
+
     /**
      * Returns the description associated with the archive.
      * @return the description
@@ -1213,18 +1215,18 @@ public class Archive
     {
         return desc;
     }
-    
-    
+
+
     /** Returns the log message associated with the given revision.
      *  @param version - the version to get the log message for
      *  @return the log message for the version.
      *  @exception - if the version does not exist for the archive.
      */
-    public String getLog(Version version) 
+    public String getLog(Version version)
             throws NodeNotFoundException
     {
         Node node = this.findNode(version);
-        if (node == null) 
+        if (node == null)
         {
             throw new NodeNotFoundException("There's no version " + version);
         }
@@ -1236,7 +1238,7 @@ public class Archive
      * 	@return the log message for the version.
      *  @exception - if the version does not exist for the archive.
      */
-    public String getLog(String vernum) 
+    public String getLog(String vernum)
             throws InvalidVersionNumberException, NodeNotFoundException
     {
         return getLog(new Version(vernum));
