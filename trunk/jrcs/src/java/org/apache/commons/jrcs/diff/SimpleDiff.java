@@ -57,18 +57,7 @@
 
 package org.apache.commons.jrcs.diff;
 
-import java.util.Collections;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.commons.jrcs.util.ToString;
+import java.util.*;
 
 /**
  * Implements a simple differencing algortithm.

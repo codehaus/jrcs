@@ -60,14 +60,7 @@ package org.apache.commons.jrcs.rcs;
 import java.text.Format;
 import java.text.MessageFormat;
 
-import org.apache.oro.text.perl.Perl5Util;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.StringSubstitution;
-import org.apache.oro.text.regex.Substitution;
-import org.apache.oro.text.regex.Util;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.oro.text.regex.*;
 
 /**
  * Formatter for the RCS keywords. It is intended as an helper class to

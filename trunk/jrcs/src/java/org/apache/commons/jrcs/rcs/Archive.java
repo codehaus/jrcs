@@ -57,28 +57,12 @@
 
 package org.apache.commons.jrcs.rcs;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.InputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.Format;
-import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.List;
-import java.util.LinkedList;
+import java.io.*;
+import java.util.*;
 
 import org.apache.commons.jrcs.diff.Diff;
-import org.apache.commons.jrcs.diff.PatchFailedException;
 import org.apache.commons.jrcs.diff.DiffException;
+import org.apache.commons.jrcs.diff.PatchFailedException;
 import org.apache.commons.jrcs.util.ToString;
 
 
