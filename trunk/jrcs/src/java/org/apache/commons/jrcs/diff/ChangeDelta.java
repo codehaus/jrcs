@@ -125,5 +125,10 @@ public class ChangeDelta extends Delta
         s.append(EOL);
         revised.toString(s, "", EOL);
     }
+
+    public void accept(RevisionVisitor visitor)
+    {
+        visitor.visit(this);
+    }
 }
 

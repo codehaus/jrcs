@@ -59,258 +59,301 @@ package org.apache.commons.jrcs.diff;
 
 import junit.framework.*;
 
-public class DiffTest extends TestCase {
+public class DiffTest
+    extends TestCase
+{
 
-  public DiffTest(String testName) {
-    super(testName);
-  }
+    public DiffTest(String testName)
+    {
+        super(testName);
+    }
 
-  public static Test suite() {
-    return new TestSuite(DiffTest.class);
-  }
+    public static Test suite()
+    {
+        return new TestSuite(DiffTest.class);
+    }
 
-  Object[] empty = new Object[] {};
-  Object[] original = new String[] {
-               "[1] one",
-               "[2] two",
-               "[3] three",
-               "[4] four",
-               "[5] five",
-               "[6] six",
-               "[7] seven",
-               "[8] eight",
-               "[9] nine"
-             };
-  // lines 3 and 9 deleted
-  Object[] rev1     = new String[] {
-               "[1] one",
-               "[2] two",
-               "[4] four",
-               "[5] five",
-               "[6] six",
-               "[7] seven",
-               "[8] eight",
-             };
+    Object[] empty = new Object[]
+                     {};
+    Object[] original = new String[]
+                        {
+                        "[1] one",
+                        "[2] two",
+                        "[3] three",
+                        "[4] four",
+                        "[5] five",
+                        "[6] six",
+                        "[7] seven",
+                        "[8] eight",
+                        "[9] nine"
+    };
+    // lines 3 and 9 deleted
+    Object[] rev1 = new String[]
+                    {
+                    "[1] one",
+                    "[2] two",
+                    "[4] four",
+                    "[5] five",
+                    "[6] six",
+                    "[7] seven",
+                    "[8] eight",
+    };
 
-  // lines 7 and 8 changed, 9 deleted
-  Object[] rev2     = new String[] {
-               "[1] one",
-               "[2] two",
-               "[3] three",
-               "[4] four",
-               "[5] five",
-               "[6] six",
-               "[7] seven revised",
-               "[8] eight revised",
-             };
+    // lines 7 and 8 changed, 9 deleted
+    Object[] rev2 = new String[]
+                    {
+                    "[1] one",
+                    "[2] two",
+                    "[3] three",
+                    "[4] four",
+                    "[5] five",
+                    "[6] six",
+                    "[7] seven revised",
+                    "[8] eight revised",
+    };
 
-  public void testCompare() {
-    assertTrue(!Diff.compare(original, empty));
-    assertTrue(!Diff.compare(empty, original));
-    assertTrue(Diff.compare(empty, empty));
-    assertTrue(Diff.compare(original, original));
-  }
+    public void testCompare()
+    {
+        assertTrue(!Diff.compare(original, empty));
+        assertTrue(!Diff.compare(empty, original));
+        assertTrue(Diff.compare(empty, empty));
+        assertTrue(Diff.compare(original, original));
+    }
 
-  public void testDeleteAll()
-  throws DifferentiationFailedException, PatchFailedException
-  {
-    Revision revision = Diff.diff(original, empty);
-    assertEquals(revision.size(), 1);
-    assertEquals(revision.getDelta(0).getClass(), DeleteDelta.class);
-    assertTrue(Diff.compare(revision.patch(original), empty));
-  }
+    public void testDeleteAll()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Revision revision = Diff.diff(original, empty);
+        assertEquals(revision.size(), 1);
+        assertEquals(revision.getDelta(0).getClass(), DeleteDelta.class);
+        assertTrue(Diff.compare(revision.patch(original), empty));
+    }
 
-  public void testTwoDeletes()
-  throws DifferentiationFailedException, PatchFailedException
-  {
-    Revision revision = Diff.diff(original, rev1);
-    assertEquals(revision.size(), 2);
-    assertEquals(revision.getDelta(0).getClass(), DeleteDelta.class);
-    assertEquals(revision.getDelta(1).getClass(), DeleteDelta.class);
-    assertTrue(Diff.compare(revision.patch(original), rev1));
-    assertEquals("3d2" + Diff.NL +
-                 "< [3] three" + Diff.NL +
-                 "9d7" + Diff.NL +
-                 "< [9] nine" + Diff.NL
-                 , revision.toString());
-  }
+    public void testTwoDeletes()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Revision revision = Diff.diff(original, rev1);
+        assertEquals(revision.size(), 2);
+        assertEquals(revision.getDelta(0).getClass(), DeleteDelta.class);
+        assertEquals(revision.getDelta(1).getClass(), DeleteDelta.class);
+        assertTrue(Diff.compare(revision.patch(original), rev1));
+        assertEquals("3d2" + Diff.NL +
+                     "< [3] three" + Diff.NL +
+                     "9d7" + Diff.NL +
+                     "< [9] nine" + Diff.NL
+                     , revision.toString());
+    }
 
-
-  public void testChangeAtTheEnd()
-  throws DifferentiationFailedException, PatchFailedException
-  {
-    Revision revision = Diff.diff(original, rev2);
-    assertEquals(1, revision.size());
-    assertEquals(ChangeDelta.class, revision.getDelta(0).getClass());
-    assertTrue(Diff.compare(revision.patch(original), rev2));
-    assertEquals("d7 3" + Diff.NL +
-                 "a9 2" + Diff.NL +
-                 "[7] seven revised" + Diff.NL +
-                 "[8] eight revised" + Diff.NL,
-                 revision.toRCSString());
-  }
-
-  public void testPatchFailed()
-  throws DifferentiationFailedException
-  {
-    try {
+    public void testChangeAtTheEnd()
+        throws DifferentiationFailedException, PatchFailedException
+    {
         Revision revision = Diff.diff(original, rev2);
-        assertTrue(!Diff.compare(revision.patch(rev1), rev2));
-        fail("PatchFailedException not thrown");
+        assertEquals(1, revision.size());
+        assertEquals(ChangeDelta.class, revision.getDelta(0).getClass());
+        assertTrue(Diff.compare(revision.patch(original), rev2));
+        assertEquals("d7 3" + Diff.NL +
+                     "a9 2" + Diff.NL +
+                     "[7] seven revised" + Diff.NL +
+                     "[8] eight revised" + Diff.NL,
+                     revision.toRCSString());
     }
-    catch(PatchFailedException e) {
+
+    public void testPatchFailed()
+        throws DifferentiationFailedException
+    {
+        try
+        {
+            Revision revision = Diff.diff(original, rev2);
+            assertTrue(!Diff.compare(revision.patch(rev1), rev2));
+            fail("PatchFailedException not thrown");
+        }
+        catch (PatchFailedException e)
+        {
+        }
     }
-  }
 
-  public void testPreviouslyFailedShuffle()
-  throws DifferentiationFailedException, PatchFailedException
-  {
-      Object[] orig = new String[] {
-                   "[1] one",
-                   "[2] two",
-                   "[3] three",
-                   "[4] four",
-                   "[5] five",
-                   "[6] six"
-                   };
+    public void testPreviouslyFailedShuffle()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Object[] orig = new String[]
+                        {
+                        "[1] one",
+                        "[2] two",
+                        "[3] three",
+                        "[4] four",
+                        "[5] five",
+                        "[6] six"
+        };
 
-      Object[] rev = new String[] {
-                   "[3] three",
-                   "[1] one",
-                   "[5] five",
-                   "[2] two",
-                   "[6] six",
-                   "[4] four"
-                   };
-      Revision revision = Diff.diff(orig, rev);
-      Object[] patched = revision.patch(orig);
-      assertTrue(Diff.compare(patched, rev));
-  }
-
-  public void testEdit5()
-  throws DifferentiationFailedException, PatchFailedException
-  {
-      Object[] orig = new String[] {
-                   "[1] one",
-                   "[2] two",
-                   "[3] three",
-                   "[4] four",
-                   "[5] five",
-                   "[6] six"
-                   };
-
-      Object[] rev = new String[] {
-                   "one revised",
-                   "two revised",
-                   "[2] two",
-                   "[3] three",
-                   "five revised",
-                   "six revised",
-                   "[5] five"
-                   };
-      Revision revision = Diff.diff(orig, rev);
-      Object[] patched = revision.patch(orig);
-      assertTrue(Diff.compare(patched, rev));
-  }
-
-  public void testShuffle()
-  throws DifferentiationFailedException, PatchFailedException
-  {
-      Object[] orig = new String[] {
-                   "[1] one",
-                   "[2] two",
-                   "[3] three",
-                   "[4] four",
-                   "[5] five",
-                   "[6] six"
-                   };
-
-      for(int seed = 0; seed < 10; seed++) {
-        Object[] shuffle = Diff.shuffle(orig);
-        Revision revision = Diff.diff(orig, shuffle);
+        Object[] rev = new String[]
+                       {
+                       "[3] three",
+                       "[1] one",
+                       "[5] five",
+                       "[2] two",
+                       "[6] six",
+                       "[4] four"
+        };
+        Revision revision = Diff.diff(orig, rev);
         Object[] patched = revision.patch(orig);
-        if (!Diff.compare(patched, shuffle)) {
-              fail("iter "+ seed + " revisions differ after patch");
-        }
-      }
-  }
-
-  public void testRandomEdit()
-  throws DifferentiationFailedException, PatchFailedException
-  {
-    Object[] orig = original;
-    for (int seed = 0; seed < 10; seed++) {
-        Object[] random = Diff.randomEdit(orig, seed);
-        Revision revision = Diff.diff(orig, random);
-        Object[] patched = revision.patch(orig);
-        if (!Diff.compare(patched, random)) {
-            fail("iter " + seed + " revisions differ after patch");
-        }
-        orig = random;
+        assertTrue(Diff.compare(patched, rev));
     }
-  }
 
-  public void testVisitor()
-  {
-      Object[] orig = new String[] {
-                   "[1] one",
-                   "[2] two",
-                   "[3] three",
-                   "[4] four",
-                   "[5] five",
-                   "[6] six"
-                   };
-      Object[] rev = new String[] {
-                   "[1] one",
-                   "[2] two revised",
-                   "[3] three",
-                   "[4] four revised",
-                   "[5] five",
-                   "[6] six"
-                   };
+    public void testEdit5()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Object[] orig = new String[]
+                        {
+                        "[1] one",
+                        "[2] two",
+                        "[3] three",
+                        "[4] four",
+                        "[5] five",
+                        "[6] six"
+        };
 
-      class Visitor implements Revision.Visitor {
+        Object[] rev = new String[]
+                       {
+                       "one revised",
+                       "two revised",
+                       "[2] two",
+                       "[3] three",
+                       "five revised",
+                       "six revised",
+                       "[5] five"
+        };
+        Revision revision = Diff.diff(orig, rev);
+        Object[] patched = revision.patch(orig);
+        assertTrue(Diff.compare(patched, rev));
+    }
 
-        StringBuffer sb = new StringBuffer();
+    public void testShuffle()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Object[] orig = new String[]
+                        {
+                        "[1] one",
+                        "[2] two",
+                        "[3] three",
+                        "[4] four",
+                        "[5] five",
+                        "[6] six"
+        };
 
-        public void visit(Revision revision) {
-            sb.append("visited Revision\n");
+        for (int seed = 0; seed < 10; seed++)
+        {
+            Object[] shuffle = Diff.shuffle(orig);
+            Revision revision = Diff.diff(orig, shuffle);
+            Object[] patched = revision.patch(orig);
+            if (!Diff.compare(patched, shuffle))
+            {
+                fail("iter " + seed + " revisions differ after patch");
+            }
+        }
+    }
+
+    public void testRandomEdit()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Object[] orig = original;
+        for (int seed = 0; seed < 10; seed++)
+        {
+            Object[] random = Diff.randomEdit(orig, seed);
+            Revision revision = Diff.diff(orig, random);
+            Object[] patched = revision.patch(orig);
+            if (!Diff.compare(patched, random))
+            {
+                fail("iter " + seed + " revisions differ after patch");
+            }
+            orig = random;
+        }
+    }
+
+    public void testVisitor()
+    {
+        Object[] orig = new String[]
+                        {
+                        "[1] one",
+                        "[2] two",
+                        "[3] three",
+                        "[4] four",
+                        "[5] five",
+                        "[6] six"
+        };
+        Object[] rev = new String[]
+                       {
+                       "[1] one",
+                       "[2] two revised",
+                       "[3] three",
+                       "[4] four revised",
+                       "[5] five",
+                       "[6] six"
+        };
+
+        class Visitor
+            implements RevisionVisitor
+        {
+
+            StringBuffer sb = new StringBuffer();
+
+            public void visit(Revision revision)
+            {
+                sb.append("visited Revision\n");
+            }
+
+            public void visit(DeleteDelta delta)
+            {
+                visit( (Delta) delta);
+            }
+
+            public void visit(ChangeDelta delta)
+            {
+                visit( (Delta) delta);
+            }
+
+            public void visit(AddDelta delta)
+            {
+                visit( (Delta) delta);
+            }
+
+            public void visit(Delta delta)
+            {
+                sb.append(delta.getRevised());
+                sb.append("\n");
+            }
+
+            public String toString()
+            {
+                return sb.toString();
+            }
         }
 
-        public void visit(Delta delta) {
-            sb.append(delta.getRevised());
-            sb.append("\n");
+        Visitor visitor = new Visitor();
+        try
+        {
+            Diff.diff(orig, rev).accept(visitor);
+            assertEquals(visitor.toString(),
+                         "visited Revision\n" +
+                         "[2] two revised\n" +
+                         "[4] four revised\n");
         }
-
-        public String toString() {
-            return sb.toString();
+        catch (Exception e)
+        {
+            fail(e.toString());
         }
-      }
+    }
 
-      Visitor visitor = new Visitor();
-      try {
-          Diff.diff(orig, rev).accept(visitor);
-          assertEquals(visitor.toString(),
-            "visited Revision\n" +
-            "[2] two revised\n" +
-            "[4] four revised\n");
-      } catch (Exception e) {
-        fail(e.toString());
-      }
-  }
-
-
-  public void testAlternativeAlgorithm()
-  throws DifferentiationFailedException, PatchFailedException
-  {
-    Revision revision = Diff.diff(original, rev2, new SimpleDiff());
-    assertEquals(1, revision.size());
-    assertEquals(ChangeDelta.class, revision.getDelta(0).getClass());
-    assertTrue(Diff.compare(revision.patch(original), rev2));
-    assertEquals("d7 3" + Diff.NL +
-                 "a9 2" + Diff.NL +
-                 "[7] seven revised" + Diff.NL +
-                 "[8] eight revised" + Diff.NL,
-                 revision.toRCSString());
-  }
+    public void testAlternativeAlgorithm()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Revision revision = Diff.diff(original, rev2, new SimpleDiff());
+        assertEquals(1, revision.size());
+        assertEquals(ChangeDelta.class, revision.getDelta(0).getClass());
+        assertTrue(Diff.compare(revision.patch(original), rev2));
+        assertEquals("d7 3" + Diff.NL +
+                     "a9 2" + Diff.NL +
+                     "[7] seven revised" + Diff.NL +
+                     "[8] eight revised" + Diff.NL,
+                     revision.toRCSString());
+    }
 }
