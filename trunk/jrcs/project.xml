@@ -54,7 +54,14 @@
       <name>Juancarlo Anez</name>
       <id>juanco</id>
       <email>juanco@apache.org</email>
-      <organization></organization>
+      <organization>Apache Software Foundation</organization>
+    </developer>
+    
+    <developer>
+      <name>Dion Gillard</name>
+      <id>dion</id>
+      <email>dion@apache.org</email>
+      <organization>Apache Software Foundation</organization>
     </developer>
 
   </developers>
