@@ -111,7 +111,6 @@ public abstract class Delta
         }
         catch (Throwable e)
         {
-            System.err.println(e);
             return null;
         }
         result.init(orig, rev);
