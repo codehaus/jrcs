@@ -295,15 +295,27 @@
     <gzip zipfile="${tarfile}.gz" src="${tarfile}" />
 
     <delete file="${tarfile}" />
+
+    <property name="zipfile" value="${dist.dir}/jrcs-${version}.zip" />
+    <zip zipfile="${zipfile}" basedir="${basedir}">
+      <exclude name="classes/**/*" />
+      <exclude name="dist/**/*" />
+      <exclude name="lib/gnu*.jar" />
+      <exclude name="lib/junit*.jar" />
+      <exclude name="lib/JavaCC.zip" />
+    </zip>
+
   </target>
 
   <target name="full.dist" depends="all">
     <mkdir dir="${dist.dir}" />
     <property name="full.tarfile" value="${dist.dir}/jrcs-full-${version}.tar" />
+    <property name="zipfile" value="${dist.dir}/jrcs-full-${version}.zip" />
     <delete file="${full.tarfile}" />
 
     <tar tarfile="${full.tarfile}" basedir="${basedir}">
       <exclude name="${full.tarfile}" />
+      <exclude name="${zipfile}" />
       <exclude name="**/CVS/*" />
       <exclude name="classes/**/*" />
       <exclude name="dist/**/*" />
@@ -314,6 +326,15 @@
     <gzip zipfile="${full.tarfile}.gz" src="${full.tarfile}" />
 
     <delete file="${full.tarfile}" />
+
+    <zip zipfile="${zipfile}" basedir="${basedir}">
+      <exclude name="${full.tarfile}" />
+      <exclude name="${zipfile}" />
+      <exclude name="**/CVS/*" />
+      <exclude name="classes/**/*" />
+      <exclude name="dist/**/*" />
+      <exclude name="lib/JavaCC.zip" />
+    </zip>
   </target>
 
   <target name="dist" depends="compact.dist,full.dist" />
