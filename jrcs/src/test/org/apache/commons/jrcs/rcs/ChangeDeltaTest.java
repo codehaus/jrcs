@@ -57,10 +57,11 @@
 
 package org.apache.commons.jrcs.rcs;
 
-import junit.framework.*;
-import org.apache.commons.jrcs.rcs.*;
-import org.apache.commons.jrcs.diff.*;
-import org.apache.commons.jrcs.util.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.apache.commons.jrcs.diff.Diff;
 
 public class ChangeDeltaTest extends TestCase
 {

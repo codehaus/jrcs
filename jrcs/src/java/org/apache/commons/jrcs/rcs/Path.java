@@ -58,9 +58,8 @@
 package org.apache.commons.jrcs.rcs;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedList;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.jrcs.diff.PatchFailedException;
 

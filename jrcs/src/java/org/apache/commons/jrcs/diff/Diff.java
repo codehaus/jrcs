@@ -57,19 +57,10 @@
 
 package org.apache.commons.jrcs.diff;
 
-import java.util.Collections;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.commons.jrcs.util.ToString;
 import org.apache.commons.jrcs.diff.myers.MyersDiff;
+import org.apache.commons.jrcs.util.ToString;
 
 /**
  * Implements a differencing engine that works on arrays of {@link Object Object}.
