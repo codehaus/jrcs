@@ -93,8 +93,10 @@ public class MyersDiff
      * @param orig The original sequence.
      * @param rev The revised sequence.
      * @return A minimum {@link PathNode Path} accross the differences graph.
+     * @throws DifferentiationFailedException if a diff path could not be found.
      */
     public PathNode buildPath(Object[] orig, Object[] rev)
+        throws DifferentiationFailedException
     {
         int n = orig.length;
         int m = rev.length;
@@ -103,7 +105,7 @@ public class MyersDiff
         PathNode diagonal[] = new PathNode[1 + 2 * max];
         int middle = (diagonal.length + 1) / 2;
 
-        PathNode node = null;
+        PathNode path = null;
 
         int d = 0;
         diagonal[middle + 1] = new PathNode(0, -1);
@@ -140,12 +142,11 @@ public class MyersDiff
                 diagonal[kmiddle] = new PathNode(i, j, prev);
                 if (i >= n && j >= m)
                 {
-                    node = diagonal[kmiddle];
-                    break outer;
+                    return diagonal[kmiddle];
                 }
             }
         }
-        return node;
+        throw new DifferentiationFailedException("could not find a diff path");
     }
 
     /**
@@ -155,7 +156,8 @@ public class MyersDiff
      * @param orig The original sequence.
      * @param rev The revised sequence.
      * @return A {@link Revision} script corresponding to the path.
-     * @throws DifferentiationFailedException
+     * @throws DifferentiationFailedException if the {@link Revision} could
+     *         not be built.
      */
     public Revision buildRevision(PathNode path, Object[] orig, Object[] rev)
     {
@@ -163,7 +165,7 @@ public class MyersDiff
             throw new IllegalArgumentException("path is null");
         if (orig == null)
             throw new IllegalArgumentException("original sequence is null");
-        if (path == null)
+        if (rev == null)
             throw new IllegalArgumentException("revised sequence is null");
 
         Revision revision = new Revision();
@@ -171,13 +173,13 @@ public class MyersDiff
         {
             int i = path.i;
             int j = path.j;
-            while (i > 0 && j > 0 && orig[i - 1].equals(rev[j - 1]))
+            while (i > 0 && j > 0
+                   && i > path.prev.i && j > path.prev.j
+                   && orig[i - 1].equals(rev[j - 1]))
             { // reverse snake
                 i--;
                 j--;
             }
-            if (i < 0 && j < 0)
-                break;
 
             int ia;
             int ja;
@@ -188,8 +190,7 @@ public class MyersDiff
                 ja = path.j;
             }
             while (path.prev != null
-                   && (ia == 0 || ja == 0
-                       || !orig[ia - 1].equals(rev[ja - 1]))
+                   && (ia == path.prev.i || ja == path.prev.j)
                    ); // while no snake
 
             Delta delta = Delta.newDelta(new Chunk(orig, ia, i - ia),

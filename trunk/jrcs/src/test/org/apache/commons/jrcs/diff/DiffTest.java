@@ -247,9 +247,9 @@ public class DiffTest extends TestCase {
         orig = random;
     }
   }
-  
+
   public void testVisitor()
-  {    
+  {
       Object[] orig = new String[] {
                    "[1] one",
                    "[2] two",
@@ -266,27 +266,27 @@ public class DiffTest extends TestCase {
                    "[5] five",
                    "[6] six"
                    };
-        
+
       class Visitor implements Revision.Visitor {
-        
+
         StringBuffer sb = new StringBuffer();
-        
+
         public void visit(Revision revision) {
             sb.append("visited Revision\n");
         }
-        
+
         public void visit(Delta delta) {
             sb.append(delta.getRevised());
             sb.append("\n");
         }
-        
+
         public String toString() {
             return sb.toString();
         }
       }
-        
+
       Visitor visitor = new Visitor();
-      try {           
+      try {
           Diff.diff(orig, rev).accept(visitor);
           assertEquals(visitor.toString(),
             "visited Revision\n" +
@@ -301,7 +301,7 @@ public class DiffTest extends TestCase {
   public void testAlternativeAlgorithm()
   throws DifferentiationFailedException, PatchFailedException
   {
-    Revision revision = Diff.diff(original, rev2, SimpleDiff.getInstance());
+    Revision revision = Diff.diff(original, rev2, new SimpleDiff());
     assertEquals(1, revision.size());
     assertEquals(ChangeDelta.class, revision.getDelta(0).getClass());
     assertTrue(Diff.compare(revision.patch(original), rev2));

@@ -66,7 +66,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.jrcs.util.ToString;
-
+import org.apache.commons.jrcs.diff.myers.MyersDiff;
 /**
  * Implements a differencing engine that works on arrays of {@link Object Object}.
  *
@@ -144,7 +144,7 @@ public class Diff
 
     protected DiffAlgorithm defaultAlgorithm()
     {
-        return new SimpleDiff();
+        return new MyersDiff();
     }
 
     /**
@@ -227,11 +227,22 @@ public class Diff
         return arrayToString(o, Diff.NL);
     }
 
+    /**
+     * Performs random edits on the input sequence. Useful for testing.
+     * @param text The input sequence.
+     * @return The sequence with random edits performed.
+     */
     public static Object[] randomEdit(Object[] text)
     {
         return randomEdit(text, text.length);
     }
 
+    /**
+     * Performs random edits on the input sequence. Useful for testing.
+     * @param text The input sequence.
+     * @param seed A seed value for the randomizer.
+     * @return The sequence with random edits performed.
+     */
     public static Object[] randomEdit(Object[] text, long seed)
     {
         List result = new ArrayList(Arrays.asList(text));
@@ -258,12 +269,23 @@ public class Diff
         return result.toArray();
     }
 
+    /**
+     * Shuffles around the items in the input sequence.
+     * @param text The input sequence.
+     * @return The shuffled sequence.
+     */
     public static Object[] shuffle(Object[] text)
     {
         return shuffle(text, text.length);
     }
 
-    public static Object[] shuffle(Object[] text, long seed)
+    /**
+    * Shuffles around the items in the input sequence.
+    * @param text The input sequence.
+    * @param seed A seed value for randomizing the suffle.
+    * @return The shuffled sequence.
+    */
+   public static Object[] shuffle(Object[] text, long seed)
     {
         List result = new ArrayList(Arrays.asList(text));
         Collections.shuffle(result);
