@@ -275,8 +275,6 @@ public class Diff
              * just a verification and it has considerable impact
              * on algorithm execution time
              */
-
-            System.out.println(deltas.toString());
             if (!compare(deltas.patch(orig), rev))
             {
                 throw new DifferentiationFailedException();
