@@ -122,9 +122,10 @@
   <property name="java.dir"  value="${src.dir}/java" />
   <property name="tests.dir" value="${src.dir}/test" />
   <property name="lib.dir"   value="${basedir}/lib" />
-  <property name="dist.dir"  value="${basedir}/dist" />
+  <property name="doc.dir"   value="${basedir}/doc" />
+  <property name="javadoc"   value="${doc.dir}/api" />
+  <property name="dist.dir"  value="${doc.dir}/dist" />
   <property name="classes"   value="${basedir}/classes" />
-  <property name="javadoc"   value="${basedir}/doc/api" />
   <property name="test.classes" value="${basedir}/test-classes" />
 
   <property name="javacc.lib.dir" value="${javacc.home}/bin/lib" />
@@ -338,5 +339,9 @@
   </target>
 
   <target name="dist" depends="compact.dist,full.dist" />
+
+  <target name="changelog" >
+     <cvschangelog destfile="changelog.xml" />
+  </target>
 </project>
 
