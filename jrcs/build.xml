@@ -179,6 +179,7 @@
            debug="on" optimize="on" deprecation="on" >
            <include name="**/jrcs/diff/**/*.java" />
            <include name="**/jrcs/util/**/*.java" />
+           <include name="**/jrcs/tools/**/*.java" />
       <exclude name="**/*Test*.class" />
     </javac>
 
