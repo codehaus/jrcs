@@ -356,4 +356,21 @@ public class DiffTest
                      "[8] eight revised" + Diff.NL,
                      revision.toRCSString());
     }
+
+    public void testLargeShuffles()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Object[] orig = Diff.randomSequence(1024);
+        for (int seed = 0; seed < 2; seed++)
+        {
+            Object[] rev = Diff.shuffle(orig);
+            Revision revision = Diff.diff(orig, rev);
+            Object[] patched = revision.patch(orig);
+            if (!Diff.compare(patched, rev))
+            {
+                fail("iter " + seed + " revisions differ after patch");
+            }
+            orig = rev;
+        }
+    }
 }

@@ -100,11 +100,16 @@ import org.apache.commons.jrcs.util.ToString;
 public class Diff
     extends ToString
 {
-
+    /** The standard line separator. */
     public static final String NL = System.getProperty("line.separator");
+
+    /** The line separator to use in RCS format output. */
     public static final String RCS_EOL = "\n";
 
-    protected Object[] orig;
+    /** The original sequence. */
+    protected final Object[] orig;
+
+    /** The differencing algorithm to use. */
     protected DiffAlgorithm algorithm;
 
     /**
@@ -286,4 +291,32 @@ public class Diff
         Collections.shuffle(result);
         return result.toArray();
     }
+
+    /**
+     * Generate a random sequence of the given size.
+     * @param The size of the sequence to generate.
+     * @return The generated sequence.
+     */
+    public static Object[] randomSequence(int size)
+    {
+        return randomSequence(size, size);
+    }
+
+    /**
+     * Generate a random sequence of the given size.
+     * @param The size of the sequence to generate.
+     * @param seed A seed value for randomizing the generation.
+     * @return The generated sequence.
+     */
+    public static Object[] randomSequence(int size, long seed)
+    {
+        Integer[] result = new Integer[size];
+        Random r = new Random(seed);
+        for(int i = 0; i < result.length; i++)
+        {
+            result[i] = new Integer(r.nextInt());
+        }
+        return result;
+    }
+
 }
