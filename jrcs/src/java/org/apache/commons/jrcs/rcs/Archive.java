@@ -364,6 +364,15 @@ public class Archive
         symbols.put(sym, vernum);
     }
 
+    /**
+     * Returns a Map of the symbols (tags) associated with each revision.
+     * The symbols are the keys and the revision numbers are the values.
+     * @return A map of symbol/revision number pairs.
+    public Map getSymbols()
+    {
+        return symbols;
+    }
+
 
     /**
      * Add a lock over a revison.
@@ -1194,11 +1203,21 @@ public class Archive
 
         return (Node[]) result.toArray(new Node[result.size()]);
     }
+
+    
+    /**
+     * Returns the description associated with the archive.
+     * @return the description
+     */
+    public String getDesc()
+    {
+        return desc;
+    }
     
     
     /** Returns the log message associated with the given revision.
      *  @param version - the version to get the log message for
-     * 	@return the log message for the version.
+     *  @return the log message for the version.
      *  @exception - if the version does not exist for the archive.
      */
     public String getLog(Version version) 
