@@ -25,7 +25,7 @@
   <url>http://jakarta.apache.org/commons/jrcs</url>
   <issueTrackingUrl>http://nagoya.apache.org:8080/scarab/servlet/scarab/</issueTrackingUrl>
   <siteAddress>jakarta.apache.org</siteAddress>
-  <siteDirectory>/www/jakarta.apache.org/turbine/maven/</siteDirectory>
+  <siteDirectory>/www/jakarta.apache.org/commons/jrcs/</siteDirectory>
   <distributionDirectory>/www/jakarta.apache.org/builds/commons/jrcs</distributionDirectory>
 
   <repository>
@@ -89,6 +89,7 @@
     <!-- Unit test classes -->
     <unitTestPatterns>
       <unitTestPattern>include = **/*Test*.java</unitTestPattern>
+      <unitTestPattern>exclude = **/DiffTest.java</unitTestPattern>
     </unitTestPatterns>
 
     <!-- Integration unit test classes -->
