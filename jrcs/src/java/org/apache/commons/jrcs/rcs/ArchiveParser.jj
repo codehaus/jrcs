@@ -64,9 +64,9 @@ CACHE_TOKENS=true;
 DEBUG_LOOKAHEAD=false;
 DEBUG_PARSER=false;
 ERROR_REPORTING=false;
-FORCE_LA_CHECK=false;
+FORCE_LA_CHECK=true;
 IGNORE_CASE=false;
-JAVA_UNICODE_ESCAPE=true;
+JAVA_UNICODE_ESCAPE=false;  // RCS files are plain ASCII
 LOOKAHEAD=1;
 OTHER_AMBIGUITY_CHECK=1;
 SANITY_CHECK=true;
@@ -210,26 +210,7 @@ TOKEN :
   < STRING: "@" ( ~["@"] | "@@" )* "@" >
 |
   < #IDCHAR:
-      [
-       "\u0021"-"\u0023", // ! " #
-       "\u0025"-"\u0027", // % & '
-       "\u0028"-"\u002b", // ( ) * +
-       "\u002d","\u002f", // - /
-       "\u003c"-"\u003f", // < = > ?
-       "\u005b"-"\u0060", // [ \ ] ^ _ `
-       "\u007b"-"\u007e", // { | } ~
-       "\u0041"-"\u005a", // A B C ... X Y Z
-       "\u0061"-"\u007a", // a b c ... x y z
-       "\u00c0"-"\u00d6",
-       "\u00d8"-"\u00f6",
-       "\u00f8"-"\u00ff",
-       "\u0100"-"\u1fff",
-       "\u3040"-"\u318f",
-       "\u3300"-"\u337f",
-       "\u3400"-"\u3d2d",
-       "\u4e00"-"\u9fff",
-       "\uf900"-"\ufaff"
-      ]
+      ["A"-"Z","a"-"z","-","_"]
   >
 |
   < #DIGIT: ["0"-"9"]  >
@@ -338,12 +319,12 @@ void newPhrase(Map map) :
 }
 
 String word():
-{ String result; }
+{ String result, right; }
 {  (
    LOOKAHEAD(2)
    result = pair()
    |
-   result = simpleWord()
+   result = simpleWord() [ right = range() { result = result + right; } ]
    )
    {return result;}
 }
@@ -364,14 +345,13 @@ String simpleWord() :
  { return result; }
 }
 
-String pair() :
+String range() :
 {
-    String left;
-    String right;
+    String rightSide;
 }
 {
-    left = simpleWord() ":" right = simpleWord()
-    { return left + ":" + right; }
+    ":" rightSide = simpleWord()
+    { return ":" + rightSide; }
 }
 
 void desc(Archive arc) :
