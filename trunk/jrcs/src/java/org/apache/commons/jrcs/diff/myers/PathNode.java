@@ -88,6 +88,8 @@ public final class PathNode
             throw new IllegalArgumentException("node points to a diagonal");
         this.i = i;
         this.j = j;
+        while (prev != null && (prev.i == i || prev.j == j))
+            prev = prev.prev;
         this.prev = prev;
     }
 
