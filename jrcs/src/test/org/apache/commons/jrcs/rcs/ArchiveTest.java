@@ -415,6 +415,13 @@ public class ArchiveTest extends TestCase
         }
     }
 
+    public void testUnicodeEscapes()
+       throws DiffException, RCSException
+    {
+        Archive archive = new Archive(new String[] { "\\user" }, "original");
+        archive.addRevision(new String[] { "user" }, "original");
+    }
+
     String[] sampleFile = {
         "head\t1.3;",
         "access;",
