@@ -194,7 +194,10 @@ public class Diff
     public Revision diff(Object[] rev)
         throws DifferentiationFailedException
     {
-        return algorithm.diff(orig, rev);
+        if (orig.length == 0 && rev.length == 0)
+            return new Revision();
+        else
+            return algorithm.diff(orig, rev);
     }
 
     /**

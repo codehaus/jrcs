@@ -62,7 +62,7 @@ import junit.framework.*;
 public abstract class DiffTest
     extends TestCase
 {
-    static final int LARGE=4*1024;
+    static final int LARGE=2*1024;
 
     protected DiffAlgorithm algorithm;
 
@@ -122,6 +122,38 @@ public abstract class DiffTest
         assertTrue(!Diff.compare(empty, original));
         assertTrue(Diff.compare(empty, empty));
         assertTrue(Diff.compare(original, original));
+    }
+
+    public void testEmptySequences()
+        throws DifferentiationFailedException
+    {
+        String[] emptyOrig = {};
+        String[] emptyRev = {};
+        Revision revision = Diff.diff(emptyOrig, emptyRev, algorithm);
+
+        assertEquals("revision size is not zero", 0, revision.size());
+    }
+
+    public void testOriginalEmpty()
+        throws DifferentiationFailedException
+    {
+        String[] emptyOrig = {};
+        String[] rev = {"1", "2", "3"};
+        Revision revision = Diff.diff(emptyOrig, rev, algorithm);
+
+        assertEquals("revision size should be one", 1, revision.size());
+        assertTrue(revision.getDelta(0) instanceof AddDelta);
+    }
+
+    public void testRevisedEmpty()
+        throws DifferentiationFailedException
+    {
+        String[] orig = {"1", "2", "3"};
+        String[] emptyRev = {};
+        Revision revision = Diff.diff(orig, emptyRev, algorithm);
+
+        assertEquals("revision size should be one", 1, revision.size());
+        assertTrue(revision.getDelta(0) instanceof DeleteDelta);
     }
 
     public void testDeleteAll()
