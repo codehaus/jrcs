@@ -214,7 +214,7 @@ public class Archive
      * @param desc   The archives description (not the log message).
      * @param vernum The initial revision number.
      */
-    protected Archive(Object[] text, String desc, Version vernum)
+    public Archive(Object[] text, String desc, Version vernum)
     {
         // can only add a trunk version
         if (vernum.size() > 2)
