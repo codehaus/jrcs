@@ -11,7 +11,7 @@ import java.io.InputStream;
  * This class is NOT thread safe.
  * 
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
- * @version $Id$
+ * @version $Revision$ $Date$
  * @see Archive
  */
 class ArchiveParser implements ArchiveParserConstants {
@@ -80,9 +80,11 @@ class ArchiveParser implements ArchiveParserConstants {
     admin(arc);
     label_1:
     while (true) {
-      if (jj_2_1(3)) {
+      switch (jj_nt.kind) {
+      case NUM:
         ;
-      } else {
+        break;
+      default:
         break label_1;
       }
       delta(arc);
@@ -90,9 +92,11 @@ class ArchiveParser implements ArchiveParserConstants {
     desc(arc);
     label_2:
     while (true) {
-      if (jj_2_2(3)) {
+      switch (jj_nt.kind) {
+      case NUM:
         ;
-      } else {
+        break;
+      default:
         break label_2;
       }
       text(arc);
@@ -102,9 +106,11 @@ class ArchiveParser implements ArchiveParserConstants {
 
   final public void admin(Archive arc) throws ParseException {
     head(arc);
-    if (jj_2_3(3)) {
+    switch (jj_nt.kind) {
+    case BRANCH:
       branch(arc);
-    } else {
+      break;
+    default:
       ;
     }
     access(arc);
@@ -116,18 +122,26 @@ class ArchiveParser implements ArchiveParserConstants {
   final public void optionals(Archive arc) throws ParseException {
     label_3:
     while (true) {
-      if (jj_2_4(3)) {
+      switch (jj_nt.kind) {
+      case COMMENT:
+      case EXPAND:
+      case ID:
         ;
-      } else {
+        break;
+      default:
         break label_3;
       }
-      if (jj_2_5(3)) {
+      switch (jj_nt.kind) {
+      case COMMENT:
         comment(arc);
-      } else if (jj_2_6(3)) {
+        break;
+      case EXPAND:
         expand(arc);
-      } else if (jj_2_7(3)) {
+        break;
+      case ID:
         newPhrase(arc.phrases);
-      } else {
+        break;
+      default:
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -137,9 +151,11 @@ class ArchiveParser implements ArchiveParserConstants {
   final public void newPhrases(Map map) throws ParseException {
     label_4:
     while (true) {
-      if (jj_2_8(3)) {
+      switch (jj_nt.kind) {
+      case ID:
         ;
-      } else {
+        break;
+      default:
         break label_4;
       }
       newPhrase(map);
@@ -149,10 +165,12 @@ class ArchiveParser implements ArchiveParserConstants {
   final public void head(Archive arc) throws ParseException {
     Version v;
     jj_consume_token(HEAD);
-    if (jj_2_9(3)) {
+    switch (jj_nt.kind) {
+    case NUM:
       v = version();
                            arc.setHead(v);
-    } else {
+      break;
+    default:
       ;
     }
     jj_consume_token(28);
@@ -161,10 +179,12 @@ class ArchiveParser implements ArchiveParserConstants {
   final public void branch(Archive arc) throws ParseException {
   Version v;
     jj_consume_token(BRANCH);
-    if (jj_2_10(3)) {
+    switch (jj_nt.kind) {
+    case NUM:
       v = version();
                              arc.setBranch(v);
-    } else {
+      break;
+    default:
       ;
     }
     jj_consume_token(28);
@@ -175,9 +195,11 @@ class ArchiveParser implements ArchiveParserConstants {
     jj_consume_token(ACCESS);
     label_5:
     while (true) {
-      if (jj_2_11(3)) {
+      switch (jj_nt.kind) {
+      case ID:
         ;
-      } else {
+        break;
+      default:
         break label_5;
       }
       name = id();
@@ -192,9 +214,12 @@ class ArchiveParser implements ArchiveParserConstants {
     jj_consume_token(SYMBOLS);
     label_6:
     while (true) {
-      if (jj_2_12(3)) {
+      switch (jj_nt.kind) {
+      case ID:
+      case SYM:
         ;
-      } else {
+        break;
+      default:
         break label_6;
       }
       s = sym();
@@ -211,9 +236,11 @@ class ArchiveParser implements ArchiveParserConstants {
     jj_consume_token(LOCKS);
     label_7:
     while (true) {
-      if (jj_2_13(3)) {
+      switch (jj_nt.kind) {
+      case ID:
         ;
-      } else {
+        break;
+      default:
         break label_7;
       }
       name = id();
@@ -222,11 +249,13 @@ class ArchiveParser implements ArchiveParserConstants {
                                             arc.addLock(name, v);
     }
     jj_consume_token(28);
-    if (jj_2_14(3)) {
+    switch (jj_nt.kind) {
+    case STRICT:
       jj_consume_token(STRICT);
       jj_consume_token(28);
                arc.setStrictLocking(true);
-    } else {
+      break;
+    default:
       ;
     }
   }
@@ -234,10 +263,12 @@ class ArchiveParser implements ArchiveParserConstants {
   final public void comment(Archive arc) throws ParseException {
   String s;
     jj_consume_token(COMMENT);
-    if (jj_2_15(3)) {
+    switch (jj_nt.kind) {
+    case STRING:
       s = string();
                             arc.setComment(s);
-    } else {
+      break;
+    default:
       ;
     }
     jj_consume_token(28);
@@ -246,10 +277,12 @@ class ArchiveParser implements ArchiveParserConstants {
   final public void expand(Archive arc) throws ParseException {
  String s;
     jj_consume_token(EXPAND);
-    if (jj_2_16(3)) {
+    switch (jj_nt.kind) {
+    case STRING:
       s = string();
                            arc.setExpand(s);
-    } else {
+      break;
+    default:
       ;
     }
     jj_consume_token(28);
@@ -262,9 +295,13 @@ class ArchiveParser implements ArchiveParserConstants {
     key = id();
     label_8:
     while (true) {
-      if (jj_2_17(3)) {
+      switch (jj_nt.kind) {
+      case ID:
+      case STRING:
+      case NUM:
         ;
-      } else {
+        break;
+      default:
         break label_8;
       }
       value = word();
@@ -275,14 +312,15 @@ class ArchiveParser implements ArchiveParserConstants {
   }
 
   final public String word() throws ParseException {
-  String result;
-    if (jj_2_18(2)) {
-      result = pair();
-    } else if (jj_2_19(3)) {
-      result = simpleWord();
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
+  String result, right;
+    result = simpleWord();
+    switch (jj_nt.kind) {
+    case 29:
+      right = range();
+                                             result = result + right;
+      break;
+    default:
+      ;
     }
     {if (true) return result;}
     throw new Error("Missing return statement in function");
@@ -291,14 +329,18 @@ class ArchiveParser implements ArchiveParserConstants {
   final public String simpleWord() throws ParseException {
     String  result;
     Version v;
-    if (jj_2_20(3)) {
+    switch (jj_nt.kind) {
+    case ID:
       result = id();
-    } else if (jj_2_21(3)) {
+      break;
+    case NUM:
       v = version();
                  result = v.toString();
-    } else if (jj_2_22(3)) {
+      break;
+    case STRING:
       result = string();
-    } else {
+      break;
+    default:
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -306,13 +348,11 @@ class ArchiveParser implements ArchiveParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public String pair() throws ParseException {
-    String left;
-    String right;
-    left = simpleWord();
+  final public String range() throws ParseException {
+    String rightSide;
     jj_consume_token(29);
-    right = simpleWord();
-      {if (true) return left + ":" + right;}
+    rightSide = simpleWord();
+      {if (true) return ":" + rightSide;}
     throw new Error("Missing return statement in function");
   }
 
@@ -339,19 +379,23 @@ class ArchiveParser implements ArchiveParserConstants {
                               node.setAuthor(s);
     jj_consume_token(28);
     jj_consume_token(STATE);
-    if (jj_2_23(3)) {
+    switch (jj_nt.kind) {
+    case ID:
       s = id();
                             node.setState(s);
-    } else {
+      break;
+    default:
       ;
     }
     jj_consume_token(28);
     jj_consume_token(BRANCHES);
     label_9:
     while (true) {
-      if (jj_2_24(3)) {
+      switch (jj_nt.kind) {
+      case NUM:
         ;
-      } else {
+        break;
+      default:
         break label_9;
       }
       v = version();
@@ -359,10 +403,12 @@ class ArchiveParser implements ArchiveParserConstants {
     }
     jj_consume_token(28);
     jj_consume_token(NEXT);
-    if (jj_2_25(3)) {
+    switch (jj_nt.kind) {
+    case NUM:
       v = version();
                                  node.setRCSNext(arc.newNode(v));
-    } else {
+      break;
+    default:
       ;
     }
     jj_consume_token(28);
@@ -394,11 +440,14 @@ class ArchiveParser implements ArchiveParserConstants {
 
   final public String sym() throws ParseException {
   Token t;
-    if (jj_2_26(3)) {
+    switch (jj_nt.kind) {
+    case SYM:
       t = jj_consume_token(SYM);
-    } else if (jj_2_27(3)) {
+      break;
+    case ID:
       t = jj_consume_token(ID);
-    } else {
+      break;
+    default:
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -413,9 +462,11 @@ class ArchiveParser implements ArchiveParserConstants {
     v = new Version(n);
     label_10:
     while (true) {
-      if (jj_2_28(3)) {
+      switch (jj_nt.kind) {
+      case 30:
         ;
-      } else {
+        break;
+      default:
         break label_10;
       }
       jj_consume_token(30);
@@ -457,493 +508,9 @@ class ArchiveParser implements ArchiveParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final private boolean jj_2_1(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_1();
-  }
-
-  final private boolean jj_2_2(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_2();
-  }
-
-  final private boolean jj_2_3(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_3();
-  }
-
-  final private boolean jj_2_4(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_4();
-  }
-
-  final private boolean jj_2_5(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_5();
-  }
-
-  final private boolean jj_2_6(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_6();
-  }
-
-  final private boolean jj_2_7(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_7();
-  }
-
-  final private boolean jj_2_8(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_8();
-  }
-
-  final private boolean jj_2_9(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_9();
-  }
-
-  final private boolean jj_2_10(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_10();
-  }
-
-  final private boolean jj_2_11(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_11();
-  }
-
-  final private boolean jj_2_12(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_12();
-  }
-
-  final private boolean jj_2_13(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_13();
-  }
-
-  final private boolean jj_2_14(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_14();
-  }
-
-  final private boolean jj_2_15(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_15();
-  }
-
-  final private boolean jj_2_16(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_16();
-  }
-
-  final private boolean jj_2_17(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_17();
-  }
-
-  final private boolean jj_2_18(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_18();
-  }
-
-  final private boolean jj_2_19(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_19();
-  }
-
-  final private boolean jj_2_20(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_20();
-  }
-
-  final private boolean jj_2_21(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_21();
-  }
-
-  final private boolean jj_2_22(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_22();
-  }
-
-  final private boolean jj_2_23(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_23();
-  }
-
-  final private boolean jj_2_24(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_24();
-  }
-
-  final private boolean jj_2_25(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_25();
-  }
-
-  final private boolean jj_2_26(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_26();
-  }
-
-  final private boolean jj_2_27(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_27();
-  }
-
-  final private boolean jj_2_28(int xla) {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    return !jj_3_28();
-  }
-
-  final private boolean jj_3R_24() {
-    if (jj_scan_token(NUM)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_11() {
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(DATE)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_3R_25()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_9() {
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_13() {
-    if (jj_scan_token(BRANCH)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_10()) jj_scanpos = xsp;
-    else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(28)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_22() {
-    if (jj_3R_23()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(29)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_3R_23()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_20() {
-    if (jj_scan_token(STRING)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_8() {
-    if (jj_3R_16()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_7() {
-    if (jj_3R_16()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_6() {
-    if (jj_3R_15()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_4() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_5()) {
-    jj_scanpos = xsp;
-    if (jj_3_6()) {
-    jj_scanpos = xsp;
-    if (jj_3_7()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    } else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    } else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_5() {
-    if (jj_3R_14()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_18() {
-    if (jj_scan_token(ID)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_25() {
-    if (jj_3R_24()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_22() {
-    if (jj_3R_20()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_21() {
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_20() {
-    if (jj_3R_18()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_23() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_20()) {
-    jj_scanpos = xsp;
-    if (jj_3_21()) {
-    jj_scanpos = xsp;
-    if (jj_3_22()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    } else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    } else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_3() {
-    if (jj_3R_13()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_28() {
-    if (jj_scan_token(30)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_3R_24()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_17() {
-    if (jj_3R_24()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_28()) { jj_scanpos = xsp; break; }
-      if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    }
-    return false;
-  }
-
-  final private boolean jj_3_2() {
-    if (jj_3R_12()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_19() {
-    if (jj_3R_23()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_1() {
-    if (jj_3R_11()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_18() {
-    if (jj_3R_22()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_21() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_18()) {
-    jj_scanpos = xsp;
-    if (jj_3_19()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    } else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_27() {
-    if (jj_scan_token(ID)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_26() {
-    if (jj_scan_token(SYM)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_19() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_26()) {
-    jj_scanpos = xsp;
-    if (jj_3_27()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    } else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_17() {
-    if (jj_3R_21()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_16() {
-    if (jj_3R_20()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_16() {
-    if (jj_3R_18()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_17()) { jj_scanpos = xsp; break; }
-      if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    }
-    if (jj_scan_token(28)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_15() {
-    if (jj_3R_20()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_15() {
-    if (jj_scan_token(EXPAND)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_16()) jj_scanpos = xsp;
-    else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(28)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_13() {
-    if (jj_3R_18()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(29)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_14() {
-    if (jj_scan_token(COMMENT)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_15()) jj_scanpos = xsp;
-    else if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(28)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_12() {
-    if (jj_3R_19()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(29)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_25() {
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_24() {
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3R_12() {
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(LOG)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_3R_20()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_23() {
-    if (jj_3R_18()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_14() {
-    if (jj_scan_token(STRICT)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    if (jj_scan_token(28)) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_11() {
-    if (jj_3R_18()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
-  final private boolean jj_3_10() {
-    if (jj_3R_17()) return true;
-    if (jj_la == 0 && jj_scanpos == jj_lastpos) return false;
-    return false;
-  }
-
   public ArchiveParserTokenManager token_source;
   SimpleCharStream jj_input_stream;
   public Token token, jj_nt;
-  private Token jj_scanpos, jj_lastpos;
-  private int jj_la;
-  public boolean lookingAhead = false;
-  private boolean jj_semLA;
 
   public ArchiveParser(java.io.InputStream stream) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
@@ -997,20 +564,6 @@ class ArchiveParser implements ArchiveParserConstants {
     throw generateParseException();
   }
 
-  final private boolean jj_scan_token(int kind) {
-    if (jj_scanpos == jj_lastpos) {
-      jj_la--;
-      if (jj_scanpos.next == null) {
-        jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();
-      } else {
-        jj_lastpos = jj_scanpos = jj_scanpos.next;
-      }
-    } else {
-      jj_scanpos = jj_scanpos.next;
-    }
-    return (jj_scanpos.kind != kind);
-  }
-
   final public Token getNextToken() {
     if ((token = jj_nt).next != null) jj_nt = jj_nt.next;
     else jj_nt = jj_nt.next = token_source.getNextToken();
@@ -1018,7 +571,7 @@ class ArchiveParser implements ArchiveParserConstants {
   }
 
   final public Token getToken(int index) {
-    Token t = lookingAhead ? jj_scanpos : token;
+    Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
       else t = t.next = token_source.getNextToken();
