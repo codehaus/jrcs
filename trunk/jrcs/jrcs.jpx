@@ -12,6 +12,7 @@
   <property category="javaFormatting" name="throwsOnNewLine" value="1"/>
   <property category="javaFormatting" name="wrapAtColumn" value="132"/>
   <property category="javadoc" name="custom.tags.1" value="todo;a;To Do:"/>
+  <property category="optimize.1" name="OptimizableType" value="com.borland.jbuilder.optimize.IntroOptimizeitProfiler"/>
   <property category="runtime" name="ConfigurationCount" value="2"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="AllTests"/>
