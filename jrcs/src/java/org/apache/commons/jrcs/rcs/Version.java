@@ -244,20 +244,15 @@ public class Version
         {
             throw new IllegalArgumentException(other.toString());
         }
-        else
-        {
-            Version otherver = (Version) other;
-            if (this.size() < otherver.size())
+        else {
+            Version otherVer = (Version) other;
+            if (this.size() != otherVer.size())
             {
-                return -1;
-            }
-            else if (this.size() > otherver.size())
-            {
-                return 1;
+              return this.size() - otherVer.size();
             }
             else
             {
-                return -toString().compareTo(otherver.toString());
+                return -compareVersions(otherVer);
             }
         }
     }
