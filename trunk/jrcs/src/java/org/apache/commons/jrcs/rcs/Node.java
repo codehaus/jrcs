@@ -212,7 +212,7 @@ public abstract class Node
      * Ghost nodes have no associated text ot deltas. CVS uses
      * them to mark certain points in the node hierarchy.
      */
-    protected boolean isGhost()
+    public boolean isGhost()
     {
         return version.isGhost() || text == null;
     }
@@ -224,7 +224,7 @@ public abstract class Node
      * @return The branch node.
      * @see BranchNode
      */
-    protected BranchNode getBranch(int no)
+    public BranchNode getBranch(int no)
     {
         if (branches == null)
         {
@@ -246,7 +246,7 @@ public abstract class Node
      * Return the root node of the node hierarchy.
      * @return The root node.
      */
-    protected Node root()
+    public Node root()
     {
         Node result = this;
         while (result.parent != null)
@@ -260,7 +260,7 @@ public abstract class Node
      * Set the locker.
      * @param user A symbol that identifies the locker.
      */
-    protected void setLocker(String user)
+    public void setLocker(String user)
     {
         locker = user.intern();
     }
@@ -269,7 +269,7 @@ public abstract class Node
      * Set the author of the node's revision.
      * @param user A symbol that identifies the author.
      */
-    protected void setAuthor(String user)
+    public void setAuthor(String user)
     {
         author = user.intern();
     }
@@ -283,7 +283,7 @@ public abstract class Node
      * century.<br>
      * The month is a number from 1 to 12.
      */
-    protected void setDate(int[] value)
+    public void setDate(int[] value)
     {
         this.date = new GregorianCalendar(value[0] + (value[0] <= 99 ? 1900 : 0),
                 value[1] - 1, value[2],
@@ -295,7 +295,7 @@ public abstract class Node
      * @param value A symbol that identifies the state. The most commonly
      * used value is Exp.
      */
-    protected void setState(String value)
+    public void setState(String value)
     {
         state = value;
     }
@@ -307,7 +307,7 @@ public abstract class Node
      * points to the next revision.
      * @param node The next node in the RCS logical hierarchy.
      */
-    protected void setRCSNext(Node node)
+    public void setRCSNext(Node node)
     {
         rcsnext = node;
     }
@@ -317,7 +317,7 @@ public abstract class Node
      * The log message is usually used to explain why the revision took place.
      * @param value The message.
      */
-    protected void setLog(String value)
+    public void setLog(String value)
     {
       // the last newline belongs to the file format
       if(value.endsWith(Archive.RCS_NEWLINE))
@@ -338,7 +338,7 @@ public abstract class Node
      * @param value The revision's text.
      * @see ArchiveParser
      */
-    protected void setText(String value)
+    public void setText(String value)
     {
         this.text = org.apache.commons.jrcs.diff.Diff.stringToArray(value);
     }
@@ -353,7 +353,7 @@ public abstract class Node
      * @param value The revision's text.
      * @see ArchiveParser
      */
-    protected void setText(Object[] value)
+    public void setText(Object[] value)
     {
         this.text = Arrays.asList(value).toArray();
     }
@@ -364,7 +364,7 @@ public abstract class Node
      * @throws InvalidVersionNumberException if the version number
      * is not a valid branch version number for the current node
      */
-    protected void addBranch(BranchNode node)
+    public void addBranch(BranchNode node)
             throws InvalidVersionNumberException
     {
         if (node.version.isLessThan(this.version)
@@ -388,7 +388,7 @@ public abstract class Node
      * the revision folowing this node.
      * @return The next version number.
      */
-    protected Version nextVersion()
+    public Version nextVersion()
     {
         return this.version.next();
     }
@@ -399,7 +399,7 @@ public abstract class Node
      * created branch of this node.
      * @return the new branch's version number.
      */
-    protected Version newBranchVersion()
+    public Version newBranchVersion()
     {
         Version result = new Version(this.version);
         if (branches == null || branches.size() <= 0)
@@ -419,7 +419,7 @@ public abstract class Node
      * Return the next node in the RCS logical hierarchy.
      * @return the next node
      */
-    protected Node getRCSNext()
+    public Node getRCSNext()
     {
         return rcsnext;
     }
@@ -435,7 +435,7 @@ public abstract class Node
      * from this node.
      * @see Path
      */
-    protected Path pathTo(Version vernum)
+    public Path pathTo(Version vernum)
             throws NodeNotFoundException
     {
         return pathTo(vernum, false);
@@ -455,7 +455,7 @@ public abstract class Node
      * version number doesn't exist.
      * @see Path
      */
-    protected Path pathTo(Version vernum, boolean soft)
+    public Path pathTo(Version vernum, boolean soft)
             throws NodeNotFoundException
     {
         Path path = new Path();
@@ -485,7 +485,7 @@ public abstract class Node
      * version number doesn't exist.
      * @see Path
      */
-    protected abstract Node nextInPathTo(Version vernum, boolean soft)
+    public abstract Node nextInPathTo(Version vernum, boolean soft)
             throws NodeNotFoundException;
 
 
@@ -501,7 +501,7 @@ public abstract class Node
      * corresponds to the next revision in the chain.</p>
      * @return The node for the delta revision.
      */
-    protected abstract Node deltaRevision();
+    public abstract Node deltaRevision();
 
 
     /**
@@ -511,7 +511,7 @@ public abstract class Node
      * @throws PatchFailedException if the diff engine determines that
      * the deltas cannot apply to the given text.
      */
-    protected void patch(List original)
+    public void patch(List original)
             throws InvalidFileFormatException,
             PatchFailedException
     {
@@ -528,7 +528,7 @@ public abstract class Node
      * @throws PatchFailedException if the diff engine determines that
      * the deltas cannot apply to the given text.
      */
-    protected void patch(List original, boolean annotate)
+    public void patch(List original, boolean annotate)
             throws InvalidFileFormatException,
             org.apache.commons.jrcs.diff.PatchFailedException
     {
@@ -651,7 +651,7 @@ public abstract class Node
      * Conver the urrent node to its RCS string representation.
      * @return The string representation
      */
-    protected String toText()
+    public String toText()
     {
         final StringBuffer s = new StringBuffer();
         toText(s, Archive.RCS_NEWLINE);
@@ -665,7 +665,7 @@ public abstract class Node
      * @param s The string buffer to add the node's image to.
      * @param EOL The line separator to use.
      */
-    protected void toText(StringBuffer s, String EOL)
+    public void toText(StringBuffer s, String EOL)
     {
         s.append(EOL + EOL);
         s.append(version.toString() + EOL);
@@ -703,7 +703,7 @@ public abstract class Node
      * Return a list with the lines of the node's text.
      * @return The list
      */
-    protected List getTextLines()
+    public List getTextLines()
     {
         return getTextLines(new LinkedList());
     }
@@ -714,7 +714,7 @@ public abstract class Node
      * @param to The offset of the line after the last one to retrieve.
      * @return The list
      */
-    protected List getTextLines(int from, int to)
+    public List getTextLines(int from, int to)
     {
         return getTextLines(new LinkedList(), from, to);
     }
@@ -723,7 +723,7 @@ public abstract class Node
      * Add a subset of the lines of the node's text to the given list.
      * @return The given list after the additions have been made.
      */
-   protected List getTextLines(List lines)
+   public List getTextLines(List lines)
     {
         return getTextLines(lines, 0, text.length);
     }
@@ -734,7 +734,7 @@ public abstract class Node
      * @param to The offset of the line after the last one to retrieve.
      * @return The given list after the additions have been made.
      */
-    protected List getTextLines(List lines, int from, int to)
+    public List getTextLines(List lines, int from, int to)
     {
         for (int i = from; i < to; i++)
         {
@@ -743,57 +743,57 @@ public abstract class Node
         return lines;
     }
 
-    protected final Date getDate()
+    public final Date getDate()
     {
         return date;
     }
 
-    protected final String getAuthor()
+    public final String getAuthor()
     {
         return author;
     }
 
-    protected final String getState()
+    public final String getState()
     {
         return state;
     }
 
-    protected final String getLog()
+    public final String getLog()
     {
         return log;
     }
 
-    protected final String getLocker()
+    public final String getLocker()
     {
         return locker;
     }
 
-    protected final Object[] getText()
+    public final Object[] getText()
     {
         return text;
     }
 
-    protected final Node getChild()
+    public final Node getChild()
     {
         return child;
     }
 
-    protected final TreeMap getBranches()
+    public final TreeMap getBranches()
     {
         return branches;
     }
 
-    protected final Node getParent()
+    public final Node getParent()
     {
         return parent;
     }
 
-    protected final Version getVersion()
+    public final Version getVersion()
     {
         return version;
     }
 
-    protected Phrases getPhrases()
+    public Phrases getPhrases()
     {
         return phrases;
     }
