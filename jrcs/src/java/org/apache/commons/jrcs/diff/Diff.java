@@ -108,41 +108,43 @@ public class Diff
 
     public static final String NL = System.getProperty("line.separator");
     public static final String RCS_EOL = "\n";
-    static DiffAlgorithm algorithm = SimpleDiff.getInstance();
 
-    private Object[] orig;
-    private DiffAlgorithmBound algorithmImpl;
+    protected Object[] orig;
+    protected DiffAlgorithm algorithm;
 
     /**
-     * create a differencing object using the given algorithm
+     * Create a differencing object using the default algorithm
+     *
+     * @param the original text that will be compared
+     */
+    public Diff(Object[] original)
+    {
+        this(original, null);
+    }
+
+    /**
+     * Create a differencing object using the given algorithm
      *
      * @param o the original text which will be compared against
      * @param algorithm the difference algorithm to use.
      */
-    public Diff(Object[] o, DiffAlgorithm algorithm)
+    public Diff(Object[] original, DiffAlgorithm algorithm)
     {
-        init(o, algorithm);
-    }
-
-    /**
-     * create a differencing object using the default algorithm
-     *
-     * @param the original text that will be compared
-     */
-    public Diff(Object[] o)
-    {
-        init(o, algorithm);
-    }
-
-    protected void init(Object[] o, DiffAlgorithm algorithm)
-    {
-        if (o == null || algorithm == null)
+        if (original == null)
         {
             throw new IllegalArgumentException();
         }
 
-        orig = o;
-        algorithmImpl = algorithm.createBoundInstance(o);
+        this.orig = original;
+        if (algorithm != null)
+            this.algorithm = algorithm;
+        else
+            this.algorithm = defaultAlgorithm();
+    }
+
+    protected DiffAlgorithm defaultAlgorithm()
+    {
+        return new SimpleDiff();
     }
 
     /**
@@ -160,7 +162,7 @@ public class Diff
             throw new IllegalArgumentException();
         }
 
-        return diff(orig, rev, algorithm);
+        return diff(orig, rev, null);
     }
 
     /**
@@ -175,7 +177,7 @@ public class Diff
                                 DiffAlgorithm algorithm)
         throws DifferentiationFailedException
     {
-        if (orig == null || rev == null || algorithm == null)
+        if (orig == null || rev == null)
         {
             throw new IllegalArgumentException();
         }
@@ -192,7 +194,7 @@ public class Diff
     public Revision diff(Object[] rev)
         throws DifferentiationFailedException
     {
-        return algorithmImpl.diff(rev);
+        return algorithm.diff(orig, rev);
     }
 
     public static boolean compare(Object[] orig, Object[] rev)
