@@ -49,11 +49,24 @@
         
     <javacc
       target="${maven.parserGrammar.jrcs}"
-      javacchome="${maven.javacc.home}"
+      javacchome="${javacc.home}"
     />
                                               
   </target>
 
+  <!-- ================================================================== -->
+  <!-- C A L L B A C K S                                                  -->
+  <!-- ================================================================== -->
+  
+  <!-- copy files required by unittests, so that they can be found on -->
+  <!-- the classpath at runtime during testing -->
+  <target
+    name="copy-test-files">
+    <copy todir="target/test-classes">
+      <fileset dir="src/test" includes="**/*.testfile"/>
+    </copy>
+  </target>
+  
   <!-- maven:start -->
   
   <!-- ================================================================== -->
