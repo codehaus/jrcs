@@ -116,7 +116,7 @@ public class ChangeDelta extends Delta
         s.append(original.size());
         s.append(EOL);
         s.append("a");
-        s.append(original.rcsfrom());
+        s.append(original.rcsto());
         s.append(" ");
         s.append(revised.size());
         s.append(EOL);

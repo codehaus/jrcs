@@ -319,7 +319,11 @@ public abstract class Node
      */
     protected void setLog(String value)
     {
-        log = value;
+      // the last newline belongs to the file format
+      if(value.endsWith(Archive.RCS_NEWLINE))
+         log = value.substring(0, value.length()-1);
+      else
+         log = value;
     }
 
     /**
@@ -576,7 +580,7 @@ public abstract class Node
      */
     public void toString(StringBuffer s)
     {
-        toString(s, "\n");
+        toString(s, Archive.RCS_NEWLINE);
     }
 
     /**
@@ -595,7 +599,7 @@ public abstract class Node
         s.append(EOL);
         s.append(version.toString() + EOL);
 
-        s.append("_date");
+        s.append("date");
         if (date != null)
         {
             DateFormat formatter = dateFormat;
@@ -667,7 +671,10 @@ public abstract class Node
         s.append(version.toString() + EOL);
 
         s.append("log" + EOL);
-        s.append(Archive.quoteString(log));
+        if (log.length() == 0)
+          s.append(Archive.quoteString(""));
+        else // add a newline after the comment
+          s.append(Archive.quoteString(log + EOL));
         s.append(EOL);
 
         if (phrases != null)
@@ -676,7 +683,7 @@ public abstract class Node
         }
 
         s.append("text" + EOL);
-        s.append(Archive.quoteString(Diff.arrayToString(text) + "\n"));
+        s.append(Archive.quoteString(Diff.arrayToString(text, EOL) + EOL));
         s.append(EOL);
 
         if (branches != null)

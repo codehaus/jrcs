@@ -76,7 +76,7 @@ import org.apache.commons.jrcs.util.ToString;
  *
  * <p>Text is represented as <code>Object[]</code> because
  * the diff engine is capable of handling more than plain ascci. In fact,
- * arrays of any type that implements 
+ * arrays of any type that implements
  * {@link java.lang.Object#hashCode hashCode()} and
  * {@link java.lang.Object#equals equals()}
  * correctly can be subject to differencing using this
@@ -92,6 +92,7 @@ public class Diff
 {
 
     public static final String NL = System.getProperty("line.separator");
+    public static final String RCS_EOL = "\n";
 
 
     static final int NOT_FOUND_i = -2;
@@ -150,7 +151,8 @@ public class Diff
         return i;
     }
 
-    public Revision diff(Object[] rev) throws DifferentiationFailedException
+    public Revision diff(Object[] rev)
+        throws DifferentiationFailedException
     {
         Map eqs = buildEqSet(orig, rev);
         int[] indx = buildIndex(eqs, orig, NOT_FOUND_i);
@@ -201,9 +203,16 @@ public class Diff
             {/* void */
             }
         }
-        if (!compare(deltas.patch(orig), rev))
+        try
         {
-            throw new DifferentiationFailedException();
+            if (!compare(deltas.patch(orig), rev))
+            {
+                throw new DifferentiationFailedException();
+            }
+        }
+        catch(PatchFailedException e)
+        {
+          throw new DifferentiationFailedException(e.getMessage());
         }
         return deltas;
     }
@@ -248,7 +257,7 @@ public class Diff
 
     /**
      * Converts an array of {@link Object Object} to a string
-     * using {@link Diff#NL Diff.NL} 
+     * using {@link Diff#NL Diff.NL}
      * as the line separator.
      * @param o the array of objects.
      */

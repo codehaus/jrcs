@@ -116,7 +116,7 @@
   <property file="build.properties" />
 
   <property name="app.name" value="jrcs" />
-  <property name="version"  value="0.1.2" />
+  <property name="version"  value="0.1.4" />
 
   <property name="src.dir"   value="${basedir}/src" />
   <property name="java.dir"  value="${src.dir}/java" />
@@ -196,6 +196,7 @@
       javacchome="${javacc.lib.dir}" 
 		optimizetokenmanager="true"
     />
+    <echo message="parser built" />  
   </target>
 
   <target name="rcs" depends="prepare,diff,parser">
@@ -260,7 +261,7 @@
     <javadoc packagenames="org.apache.commons.jrcs.*"
              sourcepath="${java.dir}" 
              destdir="${javadoc}" 
-             classpath="${libs}"
+             classpath="${libs};classes"
 				 author="true"
              version="true" 
              private="yes"
@@ -270,7 +271,8 @@
              bottom="Copyright 2002 the Apache Software Foundation&lt;br&gt;
                      Copyright &#169; 1999-2001 Juancarlo A&#241;ez, Caracas, Venezuela.&lt;br&gt;
 				         All rights reserved&lt;br&gt;.
-							http://www.suigeneris.org/jrcs">
+                     http://www.suigeneris.org/jrcs"
+            >
     </javadoc>
   </target>
 

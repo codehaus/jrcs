@@ -142,9 +142,9 @@ public class DiffTest extends TestCase {
     assertEquals(ChangeDelta.class, revision.getDelta(0).getClass());
     assertTrue(Diff.compare(revision.patch(original), rev2));
     assertEquals("d7 3" + Diff.NL +
-                 "a7 2" + Diff.NL +
+                 "a9 2" + Diff.NL +
                  "[7] seven revised" + Diff.NL +
-                 "[8] eight revised" + Diff.NL, 
+                 "[8] eight revised" + Diff.NL,
                  revision.toRCSString());
   }
 
