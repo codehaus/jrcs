@@ -135,8 +135,8 @@
   <property name="rcs.jar"    value="${lib.dir}/org.apache.commons.jrcs.rcs.jar" />
   <property name="diff.jar"   value="${lib.dir}/org.apache.commons.jrcs.diff.jar" />
   <property name="tests.jar"  value="${lib.dir}/org.apache.commons.jrcs.tests.jar" />
-  <property name="regexp.jar" value="${lib.dir}/jakarta-oro-2.0.5.jar" />
-  <property name="junit.jar"  value="${lib.dir}/junit-3.7.jar" />
+  <property name="regexp.jar" value="${lib.dir}/jakarta-oro-2.0.6.jar" />
+  <property name="junit.jar"  value="${lib.dir}/junit-3.8.jar" />
   <property name="libs"
             value="${diff.jar};${rcs.jar};${regexp.jar};${tests.jar};${junit.jar}" />
 
