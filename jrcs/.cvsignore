@@ -3,3 +3,6 @@ test-classes
 lib
 build.properties
 TEST-*.txt
+doc
+dist
+bak
