@@ -6,3 +6,4 @@ TEST-*.txt
 doc
 dist
 bak
+*.local
