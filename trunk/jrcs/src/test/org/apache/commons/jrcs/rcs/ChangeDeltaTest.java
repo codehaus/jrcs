@@ -80,7 +80,6 @@ public class ChangeDeltaTest extends TestCase
       String[] rcsFile = (String[]) Diff.stringToArray(newArc.toString());
       for(int i = 0; i < rcsFile.length && i < expectedFile.length; i++)
       {
-          System.err.println(i + " " +rcsFile[i]);
           if (! rcsFile[i].startsWith("date"))
               assertEquals("line " + i, expectedFile[i], rcsFile[i]);
       }
