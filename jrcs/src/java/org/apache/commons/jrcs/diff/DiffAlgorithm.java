@@ -77,6 +77,7 @@ public interface DiffAlgorithm
      *
      * @param rev the revised text
      * @return the revision script.
+     * @throws DifferentiationFailedException if the diff could not be computed.
      */
     public abstract Revision diff(Object[] orig, Object[] rev)
         throws DifferentiationFailedException;

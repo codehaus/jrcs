@@ -67,7 +67,8 @@ public class AllTests extends TestCase {
 
   public static Test suite() {
     TestSuite suite = new TestSuite();
-    suite.addTestSuite(org.apache.commons.jrcs.diff.DiffTest.class);
+    suite.addTestSuite(org.apache.commons.jrcs.diff.SimpleDiffTests.class);
+    suite.addTestSuite(org.apache.commons.jrcs.diff.MyersDiffTests.class);
     suite.addTestSuite(org.apache.commons.jrcs.rcs.ArchiveTest.class);
     suite.addTestSuite(org.apache.commons.jrcs.rcs.ChangeDeltaTest.class);
     suite.addTestSuite(org.apache.commons.jrcs.rcs.KeywordsFormatTest.class);

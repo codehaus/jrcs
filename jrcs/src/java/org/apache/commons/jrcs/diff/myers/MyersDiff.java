@@ -123,14 +123,14 @@ public class MyersDiff
 
         PathNode path = null;
 
-        diagonal[middle + 1] = new PathNode(0, -1);
+        diagonal[middle + 1] = new Snake(0, -1, null);
         for (int d = 0; d < MAX; d++)
         {
             for (int k = -d; k <= d; k += 2)
             {
-                int kmiddle = middle + k;
-                int kplus = kmiddle + 1;
-                int kminus = kmiddle - 1;
+                final int kmiddle = middle + k;
+                final int kplus = kmiddle + 1;
+                final int kminus = kmiddle - 1;
                 PathNode prev = null;
 
                 int i;
@@ -146,12 +146,11 @@ public class MyersDiff
                     prev = diagonal[kminus];
                 }
 
-                if (prev.i < 0 || prev.j < 0)
-                {
-                    prev = null; // discard artificial nodes used for bootstrapping
-                }
+                diagonal[kminus] = null; // no longer used
 
                 int j = i - k;
+
+                PathNode node = new DiffNode(i, j, prev);
 
                 // orig and rev are zero-based
                 // but the algorithm is one-based
@@ -161,14 +160,18 @@ public class MyersDiff
                     i++;
                     j++;
                 }
+                if (i > node.i)
+                    node = new Snake(i, j, node);
 
-                diagonal[kmiddle] = new PathNode(i, j, prev);
+                diagonal[kmiddle] = node;
 
                 if (i >= N && j >= M)
                 {
                     return diagonal[kmiddle];
                 }
             }
+            diagonal[middle+d-1] = null;
+
         }
         // According to Myers, this cannot happen
         throw new DifferentiationFailedException("could not find a diff path");
@@ -181,8 +184,8 @@ public class MyersDiff
      * @param orig The original sequence.
      * @param rev The revised sequence.
      * @return A {@link Revision} script corresponding to the path.
-     * @throws DifferentiationFailedException if the {@link Revision} could
-     *         not be built.
+     * @throws DifferentiationFailedException if a {@link Revision} could
+     *         not be built from the given path.
      */
     public static Revision buildRevision(PathNode path, Object[] orig, Object[] rev)
     {
@@ -194,34 +197,23 @@ public class MyersDiff
             throw new IllegalArgumentException("revised sequence is null");
 
         Revision revision = new Revision();
-        while (path != null && path.prev != null)
+        if (path.isSnake())
+            path = path.prev;
+        while (path != null && path.prev != null && path.prev.j >= 0)
         {
+            assert(!path.isSnake());
             int i = path.i;
             int j = path.j;
-            while (i > 0 && j > 0
-                   && i > path.prev.i && j > path.prev.j // donnot follow a snake past a previous node
-                   && orig[i - 1].equals(rev[j - 1])) // check that it is indeed a snake
-            {
-                // reverse snake
-                i--;
-                j--;
-            }
 
-            int ianchor;
-            int janchor;
-            do
-            {
-                path = path.prev;
-                ianchor = path.i;
-                janchor = path.j;
-            }
-            while (path.prev != null
-                   && (ianchor == path.prev.i || janchor == path.prev.j) // while no snake
-                   );
+            path = path.prev;
+            int ianchor = path.i;
+            int janchor = path.j;
 
             Delta delta = Delta.newDelta(new Chunk(orig, ianchor, i - ianchor),
                                          new Chunk(rev, janchor, j - janchor));
             revision.insertDelta(delta);
+            if (path.isSnake())
+                path = path.prev;
         }
         return revision;
     }
