@@ -58,89 +58,40 @@
 package org.apache.commons.jrcs.diff.myers;
 
 /**
- * A node in a diffpath.
+ *  Represents a snake in a diffpath.
+ * <p>
+ *
+ * {@link DiffNode DiffNodes} and {@link Snake Snakes} allow for compression
+ * of diffpaths, as each snake is represented by a single {@link Snake Snake}
+ * node and each contiguous series of insertions and deletions is represented
+ * by a single {@link DiffNode DiffNodes}.
  *
  * @version $Revision$ $Date$
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  *
- * @see DiffNode
- * @see Snake
- *
  */
-public abstract class PathNode
+public final class Snake
+    extends PathNode
 {
-    /** Position in the original sequence. */
-    public final int i;
-    /** Position in the revised sequence. */
-    public final int j;
-    /** The previous node in the path. */
-    public final PathNode prev;
-
     /**
-     * Concatenates a new path node with an existing diffpath.
-     * @param i The position in the original sequence for the new node.
-     * @param j The position in the revised sequence for the new node.
-     * @param prev The previous node in the path.
+     * Constructs a snake node.
+     *
+     * @param the position in the original sequence
+     * @param the position in the revised sequence
+     * @param prev the previous node in the path.
      */
-    public PathNode(int i, int j, PathNode prev)
+    public Snake(int i, int j, PathNode prev)
     {
-        this.i = i;
-        this.j = j;
-        this.prev = prev;
-    }
-
-    /**
-     * Is this node a {@link Snake Snake node}?
-     * @return true if this is a {@link Snake Snake node}
-     */
-    public abstract boolean isSnake();
-
-    /**
-     * Is this a bootstrap node?
-     * <p>
-     * In bottstrap nodes one of the two corrdinates is
-     * less than zero.
-     * @return tru if this is a bootstrap node.
-     */
-    public boolean isBootstrap()
-    {
-        return i < 0 || j < 0;
-    }
-
-    /**
-     * Skips sequences of {@link DiffNode DiffNodes} until a
-     * {@link Snake} or bootstrap node is found, or the end
-     * of the path is reached.
-     * @return The next first {@link Snake} or bootstrap node in the path, or
-     * <code>null</code>
-     * if none found.
-     */
-    public final PathNode previousSnake()
-    {
-        if (isBootstrap())
-            return null;
-        if (!isSnake() && prev != null)
-            return prev.previousSnake();
-        return this;
+        super(i, j, prev);
     }
 
     /**
      * {@inheritDoc}
+     * @return true always
      */
-    public String toString()
+    public boolean isSnake()
     {
-        StringBuffer buf = new StringBuffer("[");
-        PathNode node = this;
-        while (node != null)
-        {
-            buf.append("(");
-            buf.append(Integer.toString(node.i));
-            buf.append(",");
-            buf.append(Integer.toString(node.j));
-            buf.append(")");
-            node = node.prev;
-        }
-        buf.append("]");
-        return buf.toString();
+        return true;
     }
+
 }

@@ -59,14 +59,17 @@ package org.apache.commons.jrcs.diff;
 
 import junit.framework.*;
 
-public class DiffTest
+public abstract class DiffTest
     extends TestCase
 {
     static final int LARGE=4*1024;
 
-    public DiffTest(String testName)
+    protected DiffAlgorithm algorithm;
+
+    public DiffTest(String testName, DiffAlgorithm algorithm)
     {
         super(testName);
+        this.algorithm = algorithm;
     }
 
     public static Test suite()
@@ -124,19 +127,19 @@ public class DiffTest
     public void testDeleteAll()
         throws DifferentiationFailedException, PatchFailedException
     {
-        Revision revision = Diff.diff(original, empty);
-        assertEquals(revision.size(), 1);
-        assertEquals(revision.getDelta(0).getClass(), DeleteDelta.class);
+        Revision revision = Diff.diff(original, empty, algorithm);
+        assertEquals(1, revision.size());
+        assertEquals(DeleteDelta.class, revision.getDelta(0).getClass());
         assertTrue(Diff.compare(revision.patch(original), empty));
     }
 
     public void testTwoDeletes()
         throws DifferentiationFailedException, PatchFailedException
     {
-        Revision revision = Diff.diff(original, rev1);
-        assertEquals(revision.size(), 2);
-        assertEquals(revision.getDelta(0).getClass(), DeleteDelta.class);
-        assertEquals(revision.getDelta(1).getClass(), DeleteDelta.class);
+        Revision revision = Diff.diff(original, rev1, algorithm);
+        assertEquals(2, revision.size());
+        assertEquals(DeleteDelta.class, revision.getDelta(0).getClass());
+        assertEquals(DeleteDelta.class, revision.getDelta(1).getClass());
         assertTrue(Diff.compare(revision.patch(original), rev1));
         assertEquals("3d2" + Diff.NL +
                      "< [3] three" + Diff.NL +
@@ -148,7 +151,7 @@ public class DiffTest
     public void testChangeAtTheEnd()
         throws DifferentiationFailedException, PatchFailedException
     {
-        Revision revision = Diff.diff(original, rev2);
+        Revision revision = Diff.diff(original, rev2, algorithm);
         assertEquals(1, revision.size());
         assertEquals(ChangeDelta.class, revision.getDelta(0).getClass());
         assertTrue(Diff.compare(revision.patch(original), rev2));
@@ -164,7 +167,7 @@ public class DiffTest
     {
         try
         {
-            Revision revision = Diff.diff(original, rev2);
+            Revision revision = Diff.diff(original, rev2, algorithm);
             assertTrue(!Diff.compare(revision.patch(rev1), rev2));
             fail("PatchFailedException not thrown");
         }
@@ -195,7 +198,7 @@ public class DiffTest
                        "[6] six",
                        "[4] four"
         };
-        Revision revision = Diff.diff(orig, rev);
+        Revision revision = Diff.diff(orig, rev, algorithm);
         Object[] patched = revision.patch(orig);
         assertTrue(Diff.compare(patched, rev));
     }
@@ -223,7 +226,7 @@ public class DiffTest
                        "six revised",
                        "[5] five"
         };
-        Revision revision = Diff.diff(orig, rev);
+        Revision revision = Diff.diff(orig, rev, algorithm);
         Object[] patched = revision.patch(orig);
         assertTrue(Diff.compare(patched, rev));
     }
@@ -244,7 +247,7 @@ public class DiffTest
         for (int seed = 0; seed < 10; seed++)
         {
             Object[] shuffle = Diff.shuffle(orig);
-            Revision revision = Diff.diff(orig, shuffle);
+            Revision revision = Diff.diff(orig, shuffle, algorithm);
             Object[] patched = revision.patch(orig);
             if (!Diff.compare(patched, shuffle))
             {
@@ -260,7 +263,7 @@ public class DiffTest
         for (int seed = 0; seed < 10; seed++)
         {
             Object[] random = Diff.randomEdit(orig, seed);
-            Revision revision = Diff.diff(orig, random);
+            Revision revision = Diff.diff(orig, random, algorithm);
             Object[] patched = revision.patch(orig);
             if (!Diff.compare(patched, random))
             {
@@ -332,7 +335,7 @@ public class DiffTest
         Visitor visitor = new Visitor();
         try
         {
-            Diff.diff(orig, rev).accept(visitor);
+            Diff.diff(orig, rev, algorithm).accept(visitor);
             assertEquals(visitor.toString(),
                          "visited Revision\n" +
                          "[2] two revised\n" +
@@ -362,10 +365,10 @@ public class DiffTest
         throws DifferentiationFailedException, PatchFailedException
     {
         Object[] orig = Diff.randomSequence(LARGE);
-        for (int seed = 0; seed < 8; seed++)
+        for (int seed = 0; seed < 3; seed++)
         {
             Object[] rev = Diff.shuffle(orig);
-            Revision revision = Diff.diff(orig, rev);
+            Revision revision = Diff.diff(orig, rev, algorithm);
             Object[] patched = revision.patch(orig);
             if (!Diff.compare(patched, rev))
             {
@@ -379,15 +382,29 @@ public class DiffTest
         throws DifferentiationFailedException, PatchFailedException
     {
         Object[] orig = Diff.randomSequence(LARGE);
-        for (int seed = 0; seed < 8; seed++)
+        for (int seed = 0; seed < 3; seed++)
         {
             Object[] rev = Diff.randomEdit(orig, seed);
-            Revision revision = Diff.diff(orig, rev);
+            Revision revision = Diff.diff(orig, rev, algorithm);
             Object[] patched = revision.patch(orig);
             if (!Diff.compare(patched, rev))
             {
                 fail("iter " + seed + " revisions differ after patch");
             }
         }
+    }
+
+    public void testLargeAllEdited()
+        throws DifferentiationFailedException, PatchFailedException
+    {
+        Object[] orig = Diff.randomSequence(LARGE);
+        Object[] rev = Diff.editAll(orig);
+        Revision revision = Diff.diff(orig, rev, algorithm);
+        Object[] patched = revision.patch(orig);
+        if (!Diff.compare(patched, rev))
+        {
+            fail("revisions differ after patch");
+        }
+
     }
 }

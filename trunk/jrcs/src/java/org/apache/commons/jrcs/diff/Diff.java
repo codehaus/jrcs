@@ -144,7 +144,7 @@ public class Diff
 
     protected DiffAlgorithm defaultAlgorithm()
     {
-        return new SimpleDiff();
+        return new MyersDiff();
     }
 
     /**
@@ -197,6 +197,12 @@ public class Diff
         return algorithm.diff(orig, rev);
     }
 
+    /**
+     * Compares the two input sequences.
+     * @param orig The original sequence.
+     * @param rev The revised sequence.
+     * @return true if the sequences are identical. False otherwise.
+     */
     public static boolean compare(Object[] orig, Object[] rev)
     {
         if (orig.length != rev.length)
@@ -225,6 +231,22 @@ public class Diff
     public static String arrayToString(Object[] o)
     {
         return arrayToString(o, Diff.NL);
+    }
+
+    /**
+     * Edits all of the items in the input sequence.
+     * @param text The input sequence.
+     * @return A sequence of the same length with all the lines
+     * differing from the corresponding ones in the input.
+     */
+    public static Object[] editAll(Object[] text)
+    {
+        Object[] result = new String[text.length];
+
+        for(int i = 0; i < text.length; i++)
+            result[i] = text[i] + " <edited>";
+
+        return result;
     }
 
     /**
