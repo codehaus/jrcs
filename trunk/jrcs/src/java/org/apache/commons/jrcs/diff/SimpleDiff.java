@@ -69,58 +69,60 @@ import java.util.*;
  *
  * <p><b>Overview of Algorithm</b></p>
  *
- * <p><i>this description was written by <a
- * href='http://www.topmeadow.net/bwm'> bwm</a> whilst trying to understand
- * the algorithm - Juancarlos - feel free to remove  this attribution if
- * you agree with the content below - its just to absolve you of
- * responsibility.</i></p>
+ * <p><i>by <a
+ * href='http://www.topmeadow.net/bwm'> bwm</a>
+ * </p>
  *
  * <p>The algorithm is optimised for situations where the input sequences
  * have few repeated objects.  If it is given input with many repeated
- * objects it may report sub-optimal changes.  However, given appropriate
- * input, it is fast.</p>
+ * objects it will report sub-optimal changes.  However, given appropriate
+ * input, it is fast, and linear in memory usage.</p>
  *
  * <p>The algorithm consists of the following steps:</p>
  * <ul>
- *   <li>compute a perfect hash function for the input data</li>
- *   <li>compute the hash function for each element of the orginal
- *       and revised input sequences</li>
+ *   <li>compute an equivalence set for the input data</li>
+ *   <li>translate each element of the orginal
+ *       and revised input sequences to a member of the equivalence set
+ *   </li>
  *   <li>match the the input sequences to determine the deltas, i.e.
  *       the differences between the original and revised sequences.</li>
  * </ul>
  *
- * <p>The first step is to compute a perfect hash for the input data.  The
- * hash function is defined only for objects that are in the original
- * input sequence and in the revised input sequences:</p>
+ * <p>The first step is to compute a an equivalence set for the input data.
+ *  The equivalence set is computed from objects that are in the original
+ *  input sequence</p>
  * <pre>
- *   eq(x) = the index of the first occurence of x in the orig sequence.
+ *   eq(x) = the index of the first occurence of x in the original sequence.
  * </pre>
  *
- * <p>With this hash function, the algorithm can compare integers rather
+ * <p>With this equivalence function, the algorithm can compare integers rather
  * than strings, which is considerably more efficient.</p>
  *
  * <p>The second step is to compute the datastructure on which the
- * algorithm will operate.  Having computed the perfect hash function
+ * algorithm will operate.  Having computed the equivalence function
  * in the previous step, we can compute two arrays where
  * indx[i] = eqs(orig[i]) and jndx[i] = eqs(rev[i]).  The algorithm can
- * now operate on indx and jndx instead of orig and rev.</p>
+ * now operate on indx and jndx instead of orig and rev. Thus, comparisons
+ * are then on O(int == int) instead of O(Object.equals(Object)).
+ * </p>
  *
  * <p>The algorithm now matches indx and jndx.  Whilst indx[i] == jndx[i]
  * it skips matching objects in the sequence.  In seeking to match objects
  * in the input sequence it assumes that each object is likely to be unique.
- * It uses the known characteristics of the unique hash function.  It can
- * tell from the hash value if this object appeared in the other sequence
- * at all.  If it did not, there is point in searching for a match.</p>
+ * It uses the known characteristics of the unique equivalence function.  It can
+ * tell from the eq value if this object appeared in the other sequence
+ * at all.  If it did not, there is no point in searching for a match.</p>
  *
- * <p>Recall that hash function value is the index earliest occurrence in
- *  the orig sequence.  This information is used to search efficiently for
+ * <p>Recall that the eq function value is the index earliest occurrence in
+ * the orig sequence.  This information is used to search efficiently for
  * the next match.  The algorithm is perfect when all input objects are
- *  unique, but degrades when input objects are not unique.  When input
- *  objects are not unique an optimal match may not be found, but a
+ * unique, but degrades when input objects are not unique.  When input
+ * objects are not unique an optimal match may not be found, but a
  * correct match will be.</p>
  *
  * <p>Having identified common matching objects in the orig and revised
- * sequences, the differences between them are easily computed.</p>
+ * sequences, the differences between them are easily computed.
+ * </p>
  *
  * Modifications:
  *
