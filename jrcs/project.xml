@@ -2,14 +2,16 @@
 <project>
   
   <pomVersion>3</pomVersion>
-  <name>commons-jrcs</name>
   <id>commons-jrcs</id>
+  <name>commons-jrcs</name>
   <currentVersion>1.0-dev</currentVersion>
-  <organization>Apache Software Foundation</organization>
+  <organization>
+	  <name>Apache Software Foundation</name>
+	  <url>http://www.apache.org</url>
+  </organization>
   <inceptionYear>2002</inceptionYear>
   <package>org.apache.commons.jrcs</package>
 
-  <shortDescription>Java RCS Tools</shortDescription>
 
   <!-- Gump integration -->
   <gumpRepositoryId>jakarta</gumpRepositoryId>
@@ -17,6 +19,8 @@
   <description>
     Java RCS Tools
   </description>
+
+  <shortDescription>Java RCS Tools</shortDescription>
 
   <url>http://jakarta.apache.org/commons/jrcs</url>
   <issueTrackingUrl>http://nagoya.apache.org:8080/scarab/servlet/scarab/</issueTrackingUrl>
@@ -61,8 +65,8 @@
   <dependencies>
     
     <dependency>
-      <id>jakarta-oro</id>
-      <version>1.3</version>
+      <id>oro</id>
+      <version>2.0.6</version>
       <url>http://jakarta.apache.org/oro/</url>
     </dependency>
   
