@@ -108,12 +108,12 @@ class BranchNode
 
 
     /**
-     * Set the next node in the RCS logical hierarcy. 
-     * Update the _parent and _child node accordingly. 
+     * Set the next node in the RCS logical hierarcy.
+     * Update the _parent and _child node accordingly.
      * For BranchNodes, the RCS-next is a child, that is,
      * a node with a larger version number.
      */
-    protected void setRCSNext(Node node)
+    public void setRCSNext(Node node)
     {
         super.setRCSNext(node);
         if (this.getChild() != null)
@@ -127,12 +127,12 @@ class BranchNode
         }
     }
 
-    protected Node deltaRevision()
+    public Node deltaRevision()
     {
         return this;
     }
 
-    protected Node nextInPathTo(Version vernum, boolean soft)
+    public Node nextInPathTo(Version vernum, boolean soft)
             throws NodeNotFoundException
     {
         Version branchPoint = vernum.getBase(this.version.size());
