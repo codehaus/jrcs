@@ -224,7 +224,7 @@ public class DiffTest extends TestCase {
                    };
 
       for(int seed = 0; seed < 10; seed++) {
-        Object[] shuffle = Diff.shuffle(orig, seed);
+        Object[] shuffle = Diff.shuffle(orig);
         Revision revision = Diff.diff(orig, shuffle);
         Object[] patched = revision.patch(orig);
         if (!Diff.compare(patched, shuffle)) {
