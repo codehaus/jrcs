@@ -247,6 +247,68 @@ public class DiffTest extends TestCase {
         orig = random;
     }
   }
+  
+  public void testVisitor()
+  {    
+      Object[] orig = new String[] {
+                   "[1] one",
+                   "[2] two",
+                   "[3] three",
+                   "[4] four",
+                   "[5] five",
+                   "[6] six"
+                   };
+      Object[] rev = new String[] {
+                   "[1] one",
+                   "[2] two revised",
+                   "[3] three",
+                   "[4] four revised",
+                   "[5] five",
+                   "[6] six"
+                   };
+        
+      class Visitor implements Revision.Visitor {
+        
+        StringBuffer sb = new StringBuffer();
+        
+        public void visit(Revision revision) {
+            sb.append("visited Revision\n");
+        }
+        
+        public void visit(Delta delta) {
+            sb.append(delta.getRevised());
+            sb.append("\n");
+        }
+        
+        public String toString() {
+            return sb.toString();
+        }
+      }
+        
+      Visitor visitor = new Visitor();
+      try {           
+          Diff.diff(orig, rev).accept(visitor);
+          assertEquals(visitor.toString(),
+            "visited Revision\n" +
+            "[2] two revised\n" +
+            "[4] four revised\n");
+      } catch (Exception e) {
+        fail(e.toString());
+      }
+  }
 
 
+  public void testAlternativeAlgorithm()
+  throws DifferentiationFailedException, PatchFailedException
+  {
+    Revision revision = Diff.diff(original, rev2, SimpleDiff.getInstance());
+    assertEquals(1, revision.size());
+    assertEquals(ChangeDelta.class, revision.getDelta(0).getClass());
+    assertTrue(Diff.compare(revision.patch(original), rev2));
+    assertEquals("d7 3" + Diff.NL +
+                 "a9 2" + Diff.NL +
+                 "[7] seven revised" + Diff.NL +
+                 "[8] eight revised" + Diff.NL,
+                 revision.toRCSString());
+  }
 }

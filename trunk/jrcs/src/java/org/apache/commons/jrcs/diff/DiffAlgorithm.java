@@ -53,61 +53,20 @@ package org.apache.commons.jrcs.diff;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-import java.util.List;
-
 /**
- * Holds a delete-delta between to revisions of a text.
+ * The interface to a difference algorithm.
  *
- * @version $Id$
- * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
- * @see Delta
- * @see Diff
- * @see Chunk
+ * @version $Revision$ $Date$
+ *
+ * <p>An algorithm is essentially a factory that creates instances of
+ * the algorithm that are bound to original text.</p>
+ * @author bwm
+ *
  */
-public class DeleteDelta
-    extends Delta
+public interface DiffAlgorithm
 {
-
-    DeleteDelta()
-    {
-        super();
-    }
-
-    public DeleteDelta(Chunk orig)
-    {
-        init(orig, null);
-    }
-
-    public void verify(List target)
-        throws PatchFailedException
-    {
-        if (!original.verify(target))
-        {
-            throw new PatchFailedException();
-        }
-    }
-
-    public void applyTo(List target)
-    {
-        original.applyDelete(target);
-    }
-
-    public void toString(StringBuffer s)
-    {
-        s.append(original.rangeString());
-        s.append("d");
-        s.append(revised.rcsto());
-        s.append(Diff.NL);
-        original.toString(s, "< ", Diff.NL);
-    }
-
-    public void toRCSString(StringBuffer s, String EOL)
-    {
-        s.append("d");
-        s.append(original.rcsfrom());
-        s.append(" ");
-        s.append(original.size());
-        s.append(EOL);
-    }
+    /**
+     * return a new instance of an algorithm bound to some original text
+     */
+    public DiffAlgorithmBound createBoundInstance(Object[] orig);
 }

@@ -59,23 +59,31 @@ import java.util.List;
 /**
  * Holds a "delta" difference between to revisions of a text.
  *
- * @version $Id$
+ * @version $Revision$ $Date$
+ *
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
+ * @author <a href="mailto:bwm@hplb.hpl.hp.com">Brian McBride</a>
  * @see Diff
  * @see Chunk
+ * @see Revision
+ *
+ * modifications
+ *
+ * 27 Apr 2003 bwm
+ *
+ * Added getOriginal() and getRevised() accessor methods
+ * Added visitor pattern accept() method
  */
 
 public abstract class Delta
-        extends org.apache.commons.jrcs.util.ToString
+    extends org.apache.commons.jrcs.util.ToString
 {
 
     protected Chunk original;
 
     protected Chunk revised;
 
-
     static Class[][] DeltaClass;
-
 
     static
     {
@@ -93,9 +101,8 @@ public abstract class Delta
         }
     }
 
-
     /**
-     * Returns a Delta that corresponds to the given chunks in the 
+     * Returns a Delta that corresponds to the given chunks in the
      * original and revised text respectively.
      * @param orig the chunk in the original text.
      * @param rev  the chunk in the revised text.
@@ -103,7 +110,7 @@ public abstract class Delta
     public static Delta newDelta(Chunk orig, Chunk rev)
     {
         Class c = DeltaClass[orig.size() > 0 ? 1 : 0]
-                [rev.size() > 0  ? 1 : 0];
+            [rev.size() > 0 ? 1 : 0];
         Delta result;
         try
         {
@@ -124,7 +131,6 @@ public abstract class Delta
     {
     }
 
-
     /**
      * Creates a delta object with the given chunks from the original
      * and revised texts.
@@ -133,7 +139,6 @@ public abstract class Delta
     {
         init(orig, rev);
     }
-
 
     /**
      * Initializaes the delta with the given chunks from the original
@@ -145,20 +150,21 @@ public abstract class Delta
         revised = rev;
     }
 
-
     /**
      * Verifies that this delta can be used to patch the given text.
      * @param target the text to patch.
      * @throws PatchFailedException if the patch cannot be applied.
      */
-    public abstract void verify(List target) throws PatchFailedException;
+    public abstract void verify(List target)
+        throws PatchFailedException;
 
     /**
      * Applies this delta as a patch to the given text.
      * @param target the text to patch.
      * @throws PatchFailedException if the patch cannot be applied.
      */
-    public final void patch(List target) throws PatchFailedException
+    public final void patch(List target)
+        throws PatchFailedException
     {
         verify(target);
         try
@@ -177,7 +183,6 @@ public abstract class Delta
      * @throws PatchFailedException if the patch cannot be applied.
      */
     public abstract void applyTo(List target);
-
 
     /**
      * Converts this delta into its Unix diff style string representation.
@@ -214,7 +219,37 @@ public abstract class Delta
         toRCSString(s, EOL);
         return s.toString();
     }
+
+    /**
+     * Accessor method to return the chunk representing the original
+     * sequence of items
+     *
+     * @return the original sequence
+     */
+    public Chunk getOriginal()
+    {
+        return original;
+    }
+
+    /**
+     * Accessor method to return the chunk representing the updated
+     * sequence of items.
+     *
+     * @return the updated sequence
+     */
+    public Chunk getRevised()
+    {
+        return revised;
+    }
+
+    /**
+     * Accepts a visitor.
+     * <p>
+     * See the Visitor pattern in "Design Patterns" by the GOF4.
+     * @param visitor The visitor.
+     */
+    public void accept(Revision.Visitor visitor)
+    {
+        visitor.visit(this);
+    }
 }
-
-
-

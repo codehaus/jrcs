@@ -70,10 +70,19 @@ import org.apache.commons.jrcs.util.ToString;
  *
  * @version $Id$
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
+ * @author <a href="mailto:bwm@hplb.hpl.hp.com">Brian McBride</a>
+ *
  * @see Delta
  * @see Diff
  * @see Chunk
+ * @see Revision
+ *
+ * modifications
+ * 27 Apr 2003 bwm
+ *
+ * Added visitor pattern Visitor interface and accept() method.
  */
+
 public class Revision
         extends ToString
 {
@@ -221,6 +230,27 @@ public class Revision
     public String toRCSString()
     {
         return toRCSString(Diff.NL);
+    }
+
+    /**
+     * Definition of a visitor interface for revisions.
+     * See "Design Patterns" by the Gang of Four
+     */
+    public interface Visitor {
+        public void visit(Revision revision);
+        public void visit(Delta delta);
+    }
+
+    /**
+     * Accepts a visitor.
+     * @param visitor the {@link Visitor} visiting this instance
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+        Iterator iter = deltas_.iterator();
+        while (iter.hasNext()) {
+            ((Delta) iter.next()).accept(visitor);
+        }
     }
 
 }

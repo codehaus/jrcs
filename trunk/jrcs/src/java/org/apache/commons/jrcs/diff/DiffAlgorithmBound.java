@@ -54,60 +54,23 @@ package org.apache.commons.jrcs.diff;
  * <http://www.apache.org/>.
  */
 
-import java.util.List;
-
 /**
- * Holds a delete-delta between to revisions of a text.
+ * The interface to an implementation of a difference algorithm
  *
- * @version $Id$
- * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
- * @see Delta
- * @see Diff
- * @see Chunk
+ * @version $Revision$ $Date$
+ *
+ * <p>The algorithm is bound to some original text.</p>
+ * @author bwm
+ *
  */
-public class DeleteDelta
-    extends Delta
+public interface DiffAlgorithmBound
 {
-
-    DeleteDelta()
-    {
-        super();
-    }
-
-    public DeleteDelta(Chunk orig)
-    {
-        init(orig, null);
-    }
-
-    public void verify(List target)
-        throws PatchFailedException
-    {
-        if (!original.verify(target))
-        {
-            throw new PatchFailedException();
-        }
-    }
-
-    public void applyTo(List target)
-    {
-        original.applyDelete(target);
-    }
-
-    public void toString(StringBuffer s)
-    {
-        s.append(original.rangeString());
-        s.append("d");
-        s.append(revised.rcsto());
-        s.append(Diff.NL);
-        original.toString(s, "< ", Diff.NL);
-    }
-
-    public void toRCSString(StringBuffer s, String EOL)
-    {
-        s.append("d");
-        s.append(original.rcsfrom());
-        s.append(" ");
-        s.append(original.size());
-        s.append(EOL);
-    }
+    /**
+     * Compute a {@link org.apache.commons.jrcs.diff#Revision Revision}
+     * between the original text and the revised text.
+     *
+     * @param rev the revised text
+     */
+    Revision diff(Object[] rev)
+        throws DifferentiationFailedException;
 }
