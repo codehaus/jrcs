@@ -126,6 +126,20 @@ public class Revision
 
 
     /**
+     * Adds a delta to the start of this revision.
+     * @param delta the {@link Delta Delta} to add.
+     */
+    public synchronized void insertDelta(Delta delta)
+    {
+        if (delta == null)
+        {
+            throw new IllegalArgumentException("new delta is null");
+        }
+        deltas_.add(0, delta);
+    }
+
+
+    /**
      * Retrieves a delta from this revision by position.
      * @param i the position of the delta to retrieve.
      * @return the specified delta

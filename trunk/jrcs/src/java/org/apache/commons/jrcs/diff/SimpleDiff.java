@@ -54,43 +54,266 @@ package org.apache.commons.jrcs.diff;
  * <http://www.apache.org/>.
  */
 
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import org.apache.commons.jrcs.util.ToString;
+
 /**
- * The interface to a difference algorithm.
+ * Implements a simple difference algortithm
  *
  * @version $Revision$ $Date$
+ * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
+ * @see Delta
+ * @see Revision
  *
- * <p>An algorithm is essentially a factory that creates instances of
- * the algorithm.  This algorithm uses the singleton pattern to create
- * the factory.</p>
+ * <p><b>Overview of Algorithm</b></p>
  *
- * @author bwm
+ * <p><i>this description was written by <a
+ * href='http://www.topmeadow.net/bwm'> bwm</a> whilst trying to understand
+ * the algorithm - Juancarlos - feel free to remove  this attribution if
+ * you agree with the content below - its just to absolve you of
+ * responsibility.</i></p>
+ *
+ * <p>The algorithm is optimised for situations where the input sequences
+ * have few repeated objects.  If it is given input with many repeated
+ * objects it may report sub-optimal changes.  However, given appropriate
+ * input, it is fast.</p>
+ *
+ * <p>The algorithm consists of the following steps:</p>
+ * <ul>
+ *   <li>compute a perfect hash function for the input data</li>
+ *   <li>compute the hash function for each element of the orginal
+ *       and revised input sequences</li>
+ *   <li>match the the input sequences to determine the deltas, i.e.
+ *       the differences between the original and revised sequences.</li>
+ * </ul>
+ *
+ * <p>The first step is to compute a perfect hash for the input data.  The
+ * hash function is defined only for objects that are in the original
+ * input sequence and in the revised input sequences:</p>
+ * <pre>
+ *   eq(x) = the index of the first occurence of x in the orig sequence.
+ * </pre>
+ *
+ * <p>With this hash function, the algorithm can compare integers rather
+ * than strings, which is considerably more efficient.</p>
+ *
+ * <p>The second step is to compute the datastructure on which the
+ * algorithm will operate.  Having computed the perfect hash function
+ * in the previous step, we can compute two arrays where
+ * indx[i] = eqs(orig[i]) and jndx[i] = eqs(rev[i]).  The algorithm can
+ * now operate on indx and jndx instead of orig and rev.</p>
+ *
+ * <p>The algorithm now matches indx and jndx.  Whilst indx[i] == jndx[i]
+ * it skips matching objects in the sequence.  In seeking to match objects
+ * in the input sequence it assumes that each object is likely to be unique.
+ * It uses the known characteristics of the unique hash function.  It can
+ * tell from the hash value if this object appeared in the other sequence
+ * at all.  If it did not, there is point in searching for a match.</p>
+ *
+ * <p>Recall that hash function value is the index earliest occurrence in
+ *  the orig sequence.  This information is used to search efficiently for
+ * the next match.  The algorithm is perfect when all input objects are
+ *  unique, but degrades when input objects are not unique.  When input
+ *  objects are not unique an optimal match may not be found, but a
+ * correct match will be.</p>
+ *
+ * <p>Having identified common matching objects in the orig and revised
+ * sequences, the differences between them are easily computed.</p>
+ *
+ * Modifications:
+ *
+ * 27/Apr/2003 bwm
+ * Added some comments whilst trying to figure out the algorithm
+ *
+ * 03 May 2003 bwm
+ * Created this implementation class by refactoring it out of the Diff
+ * class to enable plug in difference algorithms
+ *
  */
+
 public class SimpleDiff
     implements DiffAlgorithm
 {
 
-    private static SimpleDiff instance = new SimpleDiff();
+    static final int NOT_FOUND_i = -2;
+    static final int NOT_FOUND_j = -1;
+    static final int EOS = Integer.MAX_VALUE;
 
-    private SimpleDiff()
-    {}
-
-    /**
-     * return the factory for this algorithm
-     *
-     * @return the factory for this algorithm
-     */
-    public static SimpleDiff getInstance()
+    public SimpleDiff()
     {
-        return instance;
+    }
+
+    protected int scan(int[] ndx, int i, int target)
+    {
+        while (ndx[i] < target)
+        {
+            i++;
+        }
+        return i;
     }
 
     /**
-     * return an instance of the algorithm bound to some original text
+     * compute the difference between an original and a revision.
      *
-     * @return an instance of the algorithm
+     * @param rev the revision to compare with the original.
+     * @return a Revision describing the differences
      */
-    public DiffAlgorithmBound createBoundInstance(Object[] orig)
+    public Revision diff(Object[] orig, Object[] rev)
+        throws DifferentiationFailedException
     {
-        return new SimpleDiffBound(orig);
+        // create map eqs, such that for each item in both orig and rev
+        // eqs(item) = firstOccurrence(item, orig);
+        Map eqs = buildEqSet(orig, rev);
+
+        // create an array such that
+        //   indx[i] = NOT_FOUND_i if orig[i] is not in rev
+        //   indx[i] = firstOccurrence(orig[i], orig)
+        int[] indx = buildIndex(eqs, orig, NOT_FOUND_i);
+
+        // create an array such that
+        //   jndx[j] = NOT_FOUND_j if orig[j] is not in rev
+        //   jndx[j] = firstOccurrence(rev[j], orig)
+        int[] jndx = buildIndex(eqs, rev, NOT_FOUND_j);
+
+        // what in effect has been done is to build a unique hash
+        // for each item that is in both orig and rev
+        // and to label each item in orig and new with that hash value
+        // or a marker that the item is not common to both.
+
+        eqs = null; // let gc know we're done with this
+
+        Revision deltas = new Revision(); //!!! new Revision()
+        int i = 0;
+        int j = 0;
+
+        // skip matching
+        // skip leading items that are equal
+        // could be written
+        // for (i=0; indx[i] != EOS && indx[i] == jndx[i]; i++);
+        // j = i;
+        for (; indx[i] != EOS && indx[i] == jndx[j]; i++, j++)
+        {
+            /* void */
+        }
+
+        while (indx[i] != jndx[j])
+        { // only equal if both == EOS
+            // they are different
+            int ia = i;
+            int ja = j;
+
+            // size of this delta
+            do
+            {
+                // look down rev for a match
+                // stop at a match
+                // or if the FO(rev[j]) > FO(orig[i])
+                // or at the end
+                while (jndx[j] < 0 || jndx[j] < indx[i])
+                {
+                    j++;
+                }
+                // look down orig for a match
+                // stop at a match
+                // or if the FO(orig[i]) > FO(rev[j])
+                // or at the end
+                while (indx[i] < 0 || indx[i] < jndx[j])
+                {
+                    i++;
+                }
+
+                // this doesn't do a compare each line with each other line
+                // so it won't find all matching lines
+            }
+            while (indx[i] != jndx[j]);
+
+            // on exit we have a match
+
+            // they are equal, reverse any exedent matches
+            // it is possible to overshoot, so count back matching items
+            while (i > ia && j > ja && indx[i - 1] == jndx[j - 1])
+            {
+                --i;
+                --j;
+            }
+
+            deltas.addDelta(Delta.newDelta(new Chunk(orig, ia, i - ia),
+                                           new Chunk(rev, ja, j - ja)));
+            // skip matching
+            for (; indx[i] != EOS && indx[i] == jndx[j]; i++, j++)
+            {
+                /* void */
+            }
+        }
+        return deltas;
     }
+
+    /**
+     * create a <code>Map</code> from each common item in orig and rev
+     * to the index of its first occurrence in orig
+     *
+     * @param orig the original sequence of items
+     * @param rev  the revised sequence of items
+     */
+    protected Map buildEqSet(Object[] orig, Object[] rev)
+    {
+        // construct a set of the objects that orig and rev have in common
+
+        // first construct a set containing all the elements in orig
+        Set items = new HashSet(Arrays.asList(orig));
+
+        // then remove all those not in rev
+        items.retainAll(Arrays.asList(rev));
+
+        Map eqs = new HashMap();
+        for (int i = 0; i < orig.length; i++)
+        {
+            // if its a common item and hasn't been found before
+            if (items.contains(orig[i]))
+            {
+                // add it to the map
+                eqs.put(orig[i], new Integer(i));
+                // and make sure its not considered again
+                items.remove(orig[i]);
+            }
+        }
+        return eqs;
+    }
+
+    /**
+     * build a an array such each a[i] = eqs([i]) or NF if eqs([i]) undefined
+     *
+     * @param eqs a mapping from Object to Integer
+     * @param seq a sequence of objects
+     * @param NF  the not found marker
+     */
+    protected int[] buildIndex(Map eqs, Object[] seq, int NF)
+    {
+        int[] result = new int[seq.length + 1];
+        for (int i = 0; i < seq.length; i++)
+        {
+            Integer value = (Integer) eqs.get(seq[i]);
+            if (value == null || value.intValue() < 0)
+            {
+                result[i] = NF;
+            }
+            else
+            {
+                result[i] = value.intValue();
+            }
+        }
+        result[seq.length] = EOS;
+        return result;
+    }
+
 }

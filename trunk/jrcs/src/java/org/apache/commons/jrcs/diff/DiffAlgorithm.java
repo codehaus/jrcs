@@ -57,16 +57,24 @@ package org.apache.commons.jrcs.diff;
  * The interface to a difference algorithm.
  *
  * @version $Revision$ $Date$
+ * @author bwm
  *
  * <p>An algorithm is essentially a factory that creates instances of
  * the algorithm that are bound to original text.</p>
- * @author bwm
  *
  */
 public interface DiffAlgorithm
 {
     /**
-     * return a new instance of an algorithm bound to some original text
+     * Compute a {@link org.apache.commons.jrcs.diff#Revision Revision}
+     * between the original sequence and the revised sequence.
+     * <p>
+     * The revision can be used to construct the revised sequence
+     * from the original sequence.
+     *
+     * @param rev the revised text
+     * @return the revision script.
      */
-    public DiffAlgorithmBound createBoundInstance(Object[] orig);
+    public abstract Revision diff(Object[] orig, Object[] rev)
+        throws DifferentiationFailedException;
 }
