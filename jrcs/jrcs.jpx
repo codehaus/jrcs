@@ -9,11 +9,18 @@
   <property category="javaFormatting" name="otherBraceNextLine" value="1"/>
   <property category="javaFormatting" name="packageThreshold" value="4"/>
   <property category="javaFormatting" name="throwsOnNewLine" value="1"/>
-  <property category="runtime" name="DefaultConfiguration" value="-1"/>
+  <property category="javadoc" name="custom.tags.1" value="todo;a;To Do:"/>
+  <property category="runtime" name="ConfigurationCount" value="1"/>
+  <property category="runtime" name="DefaultConfiguration" value="1"/>
   <property category="runtime.0" name="ConfigurationName" value="AllTests"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.TestRunner"/>
   <property category="runtime.0" name="test.class" value="org.apache.commons.jrcs.AllTests"/>
   <property category="runtime.0" name="test.harness" value="com.borland.jbuilder.unittest.JBTestRunner"/>
+  <property category="runtime.1" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.1" name="ConfigurationName" value="JDiff"/>
+  <property category="runtime.1" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.1" name="application.class" value="org.apache.commons.jrcs.tools.JDiff"/>
+  <property category="runtime.1" name="application.parameters" value="\tmp\jdifftest\CommandCentral1.java \tmp\jdifftest\CommandCentral2.java"/>
   <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>

@@ -73,10 +73,10 @@ import java.util.Iterator;
  * Implements a differencing engine that works on arrays of {@link Object Object}.
  *
  * <p>Within this library, the word <i>text</i> means a unit of information
- * subject to version control.
+ * subject to differencing.
  *
  * <p>Text is represented as <code>Object[]</code> because
- * the diff engine is capable of handling more than plain ascci. In fact,
+ * the diff engine is capable of handling more than plain ASCII. In fact,
  * arrays of any type that implements
  * {@link java.lang.Object#hashCode hashCode()} and
  * {@link java.lang.Object#equals equals()}
@@ -92,18 +92,44 @@ public class Diff
         extends ToString
 {
 
+    /**
+     * The system line separator is used for standard kinds of output
+     */
     public static final String NL = System.getProperty("line.separator");
+
+    /**
+     * For RCS kind of output a plain newline is required.
+     */
     public static final String RCS_EOL = "\n";
 
 
+    /**
+     * Mark for non-matching items in source sequences.
+     */
     static final int NOT_FOUND_i = -2;
 
+    /**
+     * Mark for non-matching items in target sequences. They have to
+     * be different in source and target because they would match
+     * otherwise.
+     */
     static final int NOT_FOUND_j = -1;
 
+    /**
+     * Marker for End-Of-Sequence. It must be the same for both sequences.
+     */
     static final int EOS = Integer.MAX_VALUE;
 
-    Object[] orig;
 
+    /**
+     * The source (original) sequence is stored here.
+     */
+    protected Object[] orig;
+
+    /**
+     * Constructs a differencer based on an original/source sequence.
+     * @param o the original sequences.
+     */
     public Diff(Object[] o)
     {
         if (o == null)
@@ -113,6 +139,15 @@ public class Diff
         orig = o;
     }
 
+    /**
+     * Calculates the differences between two input sequences.
+     * @param orig The original/source sequence.
+     * @param rev The target/revised sequence.
+     * @return The differences as a {@link Revision Revision} object.
+     * @throws DifferentiationFailedException if the algorithm cannot
+     * construct the revised sequence out of the original one using the generated
+     * edit script.
+     */
     public static Revision diff(Object[] orig, Object[] rev)
             throws DifferentiationFailedException
     {
@@ -124,6 +159,12 @@ public class Diff
         return new Diff(orig).diff(rev);
     }
 
+    /**
+     * Compares two sequences.
+     * @param orig The original sequence.
+     * @param rev Revised sequences.
+     * @return true if the sequences are identical, false otherwise.
+     */
     public static boolean compare(Object[] orig, Object[] rev)
     {
         if (orig.length != rev.length)
@@ -143,6 +184,14 @@ public class Diff
         }
     }
 
+    /**
+     * Scans a sequence of indexes for a value.
+     * @param ndx The sequence to scan.
+     * @param i The starting index.
+     * @param target The value to scan for.
+     * @return The index in the sequence of a value less-than or equal to
+     * the target value.
+     */
     protected int scan(int[] ndx, int i, int target)
     {
         while (ndx[i] < target)
@@ -152,6 +201,20 @@ public class Diff
         return i;
     }
 
+    /**
+     * Calculates the differences between the sequence given as original/source
+     * and the given target/revised sequence.
+     * <p>
+     * This algorithm was designed by
+     * <a href="juanca@suigeneris.org">Juancarlo Añez</a> way back when
+     * there weren't any good implementations of diff in Java.
+     *
+     * @param rev The target/revised sequence.
+     * @return The differences as a {@link Revision Revision} object.
+     * @throws DifferentiationFailedException if the algorithm cannot
+     * construct the revised sequence out of the original one using the generated
+     * edit script.
+     */
     public Revision diff(Object[] rev)
         throws DifferentiationFailedException
     {
@@ -160,22 +223,23 @@ public class Diff
         int[] jndx = buildIndex(eqs, rev, NOT_FOUND_j);
         eqs = null; // let gc know we're done with this
 
-        Revision deltas = new Revision(); //!!! new Revision()
+        Revision deltas = new Revision();
         int i = 0;
         int j = 0;
 
         // skip matching
         for (; indx[i] != EOS && indx[i] == jndx[j]; i++, j++)
-        {/* void */
+        {
+            /* void */
         }
 
-        while (indx[i] != jndx[j])
-        { // only equal if both == EOS
-            // they are different
+        while (indx[i] != jndx[j]) // only equal if both == EOS
+        {
+            // indexed items in each sequence are different
             int ia = i;
             int ja = j;
 
-            // size of this delta
+            // find the delta
             do
             {
                 while (jndx[j] < 0 || jndx[j] < indx[i])
@@ -194,18 +258,25 @@ public class Diff
             {
                 --i;
                 --j;
-                //System.err.println("************* reversing "+ i);
             }
 
             deltas.addDelta(Delta.newDelta(new Chunk(orig, ia, i - ia),
                     new Chunk(rev, ja, j - ja)));
+
             // skip matching
             for (; indx[i] != EOS && indx[i] == jndx[j]; i++, j++)
-            {/* void */
+            {
+                /* void */
             }
         }
         try
         {
+            /** @todo This should be removed at some point as it is
+             * just a verification and it has considerable impact
+             * on algorithm execution time
+             */
+
+            System.out.println(deltas.toString());
             if (!compare(deltas.patch(orig), rev))
             {
                 throw new DifferentiationFailedException();
@@ -218,7 +289,20 @@ public class Diff
         return deltas;
     }
 
-
+    /**
+     * Builds the "equivalence set" for two input sequences.
+     * <p>
+     * The equivalence set is a map that contains sequence items
+     * as keys, and a list of source-sequence indexes as values.
+     * <p>
+     * Only items that appear in both input sequences are mapped, and
+     * the indexes in the map values correspond to the positions in the
+     * original/source sequence where the items were found.
+     *
+     * @param orig The original/source sequence.
+     * @param rev The target/revised sequence.
+     * @return The equivalence set.
+     */
     protected Map buildEqSet(Object[] orig, Object[] rev)
     {
         Set items = new HashSet(Arrays.asList(orig));
@@ -241,6 +325,22 @@ public class Diff
         return eqs;
     }
 
+    /**
+     * Indexes a sequence according to a given equivalence set.
+     * <p>
+     * Items in the input sequene are searched for in the equivalence set.
+     * For each item, the index with the less absolute distance to the item
+     * number is chosen from the list in the eauivalence set.
+     * <p>
+     * Items which do not appear in the equivalence set get an index of
+     * NF (not found).
+     *
+     * @param eqs The equivalence set.
+     * @param seq The sequence to index.
+     * @param NF The value to use for sequence items which do not appear
+     * on the equivalence set.
+     * @return The index.
+     */
     protected int[] buildIndex(Map eqs, Object[] seq, int NF)
     {
         int[] result = new int[seq.length + 1];
@@ -254,13 +354,12 @@ public class Diff
             else
             {
                 Iterator match = matches.iterator();
-                Integer value = (Integer) match.next();
-                int j = value.intValue();
+                int j = ((Integer) match.next()).intValue();
                 int distance = Math.abs(i - j);
+                result[i] = j;
                 while (match.hasNext())
                 {
-                    value = (Integer) match.next();
-                    j = value.intValue();
+                    j = ((Integer) match.next()).intValue();;
                     int d = Math.abs(i - j);
                     if (d < distance)
                     {
@@ -288,12 +387,23 @@ public class Diff
 
 
 
+    /**
+     * Performs random edits on the input sequence. Useful for testing.
+     * @param text The input sequence.
+     * @return The sequence with random edits performed.
+     */
     public static Object[] randomEdit(Object[] text)
     {
         return randomEdit(text, text.length);
     }
 
 
+    /**
+     * Performs random edits on the input sequence. Useful for testing.
+     * @param text The input sequence.
+     * @param seed A seed value for the randomizer.
+     * @return The sequence with random edits performed.
+     */
     public static Object[] randomEdit(Object[] text, long seed)
     {
         List result = new ArrayList(Arrays.asList(text));
@@ -320,12 +430,23 @@ public class Diff
     }
 
 
+    /**
+     * Shuffles around the items in the input sequence.
+     * @param text The input sequence.
+     * @return The shuffled sequence.
+     */
     public static Object[] shuffle(Object[] text)
     {
         return shuffle(text, text.length);
     }
 
 
+    /**
+     * Shuffles around the items in the input sequence.
+     * @param text The input sequence.
+     * @param seed A seed value for randomizing the suffle.
+     * @return The shuffled sequence.
+     */
     public static Object[] shuffle(Object[] text, long seed)
     {
         List result = new ArrayList(Arrays.asList(text));
