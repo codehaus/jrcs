@@ -179,7 +179,6 @@
            debug="on" optimize="on" deprecation="on" >
            <include name="**/jrcs/diff/**/*.java" />
            <include name="**/jrcs/util/**/*.java" />
-           <include name="**/jrcs/tools/**/*.java" />
       <exclude name="**/*Test*.class" />
     </javac>
 
@@ -266,7 +265,7 @@
 				 author="true"
              version="true" 
              private="yes"
-             overview="java/org/apache/commons/jrcs/overview.html"
+             overview="${java.dir}/org/apache/commons/jrcs/overview.html"
 				 windowtitle="${app.name} API"
     		    doctitle="${app.name}"
              bottom="Copyright 2002 the Apache Software Foundation&lt;br&gt;

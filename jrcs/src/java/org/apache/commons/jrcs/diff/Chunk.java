@@ -54,14 +54,13 @@ package org.apache.commons.jrcs.diff;
  * <http://www.apache.org/>.
  */
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Holds a information about a parrt of the text involved in 
+ * Holds a information about a parrt of the text involved in
  * a differencing or patching operation.
  *
  * @version $Id$
@@ -70,7 +69,7 @@ import java.util.List;
  * @see Delta
  */
 public class Chunk
-        extends org.apache.commons.jrcs.util.ToString
+    extends org.apache.commons.jrcs.util.ToString
 {
 
     protected int anchor;
@@ -238,7 +237,7 @@ public class Chunk
             target.remove(i);
         }
     }
-    
+
     /**
      * Add the text of this chunk to the target at the given position.
      * @param start where to add the text.
@@ -261,7 +260,6 @@ public class Chunk
     {
         toString(s, "", "");
     }
-
 
     /**
      * Provide a string image of the chunk using the given prefix and
@@ -316,7 +314,6 @@ public class Chunk
         return slice(Arrays.asList(seq), pos, count);
     }
 
-
     /**
      * Provide a string representation of the numeric range of this chunk.
      */
@@ -354,7 +351,4 @@ public class Chunk
             s.append(Integer.toString(rcsto()));
         }
     }
-
-    
 }
-

@@ -54,60 +54,43 @@ package org.apache.commons.jrcs.diff;
  * <http://www.apache.org/>.
  */
 
-import java.util.List;
-
 /**
- * Holds a delete-delta between to revisions of a text.
+ * The interface to a difference algorithm.
  *
- * @version $Id$
- * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
- * @see Delta
- * @see Diff
- * @see Chunk
+ * @version $Revision$ $Date$
+ *
+ * <p>An algorithm is essentially a factory that creates instances of
+ * the algorithm.  This algorithm uses the singleton pattern to create
+ * the factory.</p>
+ *
+ * @author bwm
  */
-public class DeleteDelta
-    extends Delta
+public class SimpleDiff
+    implements DiffAlgorithm
 {
 
-    DeleteDelta()
+    private static SimpleDiff instance = new SimpleDiff();
+
+    private SimpleDiff()
+    {}
+
+    /**
+     * return the factory for this algorithm
+     *
+     * @return the factory for this algorithm
+     */
+    public static SimpleDiff getInstance()
     {
-        super();
+        return instance;
     }
 
-    public DeleteDelta(Chunk orig)
+    /**
+     * return an instance of the algorithm bound to some original text
+     *
+     * @return an instance of the algorithm
+     */
+    public DiffAlgorithmBound createBoundInstance(Object[] orig)
     {
-        init(orig, null);
-    }
-
-    public void verify(List target)
-        throws PatchFailedException
-    {
-        if (!original.verify(target))
-        {
-            throw new PatchFailedException();
-        }
-    }
-
-    public void applyTo(List target)
-    {
-        original.applyDelete(target);
-    }
-
-    public void toString(StringBuffer s)
-    {
-        s.append(original.rangeString());
-        s.append("d");
-        s.append(revised.rcsto());
-        s.append(Diff.NL);
-        original.toString(s, "< ", Diff.NL);
-    }
-
-    public void toRCSString(StringBuffer s, String EOL)
-    {
-        s.append("d");
-        s.append(original.rcsfrom());
-        s.append(" ");
-        s.append(original.size());
-        s.append(EOL);
+        return new SimpleDiffBound(orig);
     }
 }
