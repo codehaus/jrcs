@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<project>
+  
+  <version>2</version>
+  <name>commons-jrcs</name>
+  <id>commons-jrcs</id>
+  <currentVersion>1.0-dev</currentVersion>
+  <organization>Apache Software Foundation</organization>
+  <inceptionYear>2002</inceptionYear>
+  <package>org.apache.commons.sql</package>
+
+  <shortDescription>Java RCS Tools</shortDescription>
+
+  <!-- Gump integration -->
+  <gumpRepositoryId>jakarta</gumpRepositoryId>
+
+  <description>
+    Java RCS Tools
+  </description>
+
+  <url>http://jakarta.apache.org/commons/jrcs</url>
+  <cvsWebUrl>http://cvs.apache.org/viewcvs/jakarta/jakarta-commons-sandbox/jrcs/</cvsWebUrl>
+  <issueTrackingUrl>http://nagoya.apache.org:8080/scarab/servlet/scarab/</issueTrackingUrl>
+  <siteAddress>jakarta.apache.org</siteAddress>
+  <siteDirectory>/www/jakarta.apache.org/turbine/maven/</siteDirectory>
+  <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-turbine-maven/</distributionDirectory>
+
+  <mailingLists>
+    <mailingList>
+      <name>Maven User List</name>
+      <subscribe>turbine-maven-user-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>turbine-maven-user-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://nagoya.apache.org:8080/eyebrowse/SummarizeList?listName=turbine-maven-user@jakarta.apache.org</archive>
+    </mailingList>
+    <mailingList>
+      <name>Maven Developer List</name>
+      <subscribe>turbine-maven-dev-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>turbine-maven-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://nagoya.apache.org:8080/eyebrowse/SummarizeList?listName=turbine-maven-dev@jakarta.apache.org</archive>
+    </mailingList>
+  </mailingLists>
+
+  <developers>
+
+    <developer>
+      <name>Juancarlo Anez</name>
+      <id>juanco</id>
+      <email>juanco@apache.org</email>
+      <organization></organization>
+    </developer>
+
+  </developers>
+
+
+  <!-- Need to mark these as compile-time/run-time -->
+
+  <dependencies>
+    
+    <dependency>
+      <name>jakarta-oro</name>
+      <type>required</type>
+      <version>1.3</version>
+      <jar>oro.jar</jar>
+      <url>http://jakarta.apache.org/oro/</url>
+    </dependency>
+  
+  </dependencies>
+
+  <build>
+
+    <sourceDirectories>
+      <sourceDirectory>src/java</sourceDirectory>
+    </sourceDirectories>
+
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    
+    <integrationUnitTestSourceDirectory/>
+
+    <aspectSourceDirectories>
+    </aspectSourceDirectories>
+
+    <!-- Unit test classes -->
+    <unitTestPatterns>
+      <unitTestPattern>include = **/*Test*.java</unitTestPattern>
+    </unitTestPatterns>
+
+    <!-- Integration unit test classes -->
+    <integrationUnitTestPatterns>
+    </integrationUnitTestPatterns>
+
+    <!-- J A R  R E S O U R C E S -->
+    <!-- Resources that are packaged up inside the JAR file -->
+
+    <!-- These are ant pattern sets -->
+    <jarResources>
+    </jarResources>
+
+    <jars>
+    </jars>
+  </build>
+</project>
+
