@@ -105,10 +105,8 @@ public class JDiff
             Object[] orig = loadFile(argv[0]);
             Object[] rev = loadFile(argv[1]);
 
-            System.err.println("---go!----");
             Diff df = new Diff(orig);
             Revision r = df.diff(rev);
-            System.err.println("---end!---");
 
             System.err.println("------");
             System.out.print(r.toString());
@@ -120,14 +118,8 @@ public class JDiff
                 //String recos = Diff.arrayToString(reco);
                 if (!Diff.compare(rev, reco))
                 {
-                    /*
-                    System.err.println("**********");
-                    System.err.print(Diff.arrayToString(rev));
-                    System.err.println("**********");
-                    System.err.print(recos);
-                    System.err.println("**********");
-                    */
-                    System.err.println("files differ");
+                    System.err.println("INTERNAL ERROR:"
+                                        + "files differ after patching!");
                 }
             }
             catch (Throwable o)
